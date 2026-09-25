@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workflash Automation | AI Automation Specialists Since 2021</title>
+  <meta name="description" content="Workflash Automation – AI automation specialists since 2021. From simple WhatsApp & Excel automation for small businesses to AI agents, Python analytics and fully autonomous operations for enterprises." />
+  <meta name="keywords" content="AI automation company India, WhatsApp automation, CRM automation, Python automation, business process automation, AI agents, Power BI dashboards, RPA, Workflash Automation" />
+  <meta name="author" content="Workflash Automation" />
+  <meta property="og:title" content="Workflash Automation | AI Automation Specialists Since 2021" />
+  <meta property="og:description" content="From your first automated workflow to a fully autonomous business. Get a free automation audit." />
+  <meta property="og:image" content="assets/logo-full.png" />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#040A22" />
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ============ ICON SPRITE ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gBrand" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1BC8F5"/><stop offset="1" stop-color="#0B5CFF"/></linearGradient>
+  </defs>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8 11h.01M12 11h.01M16 11h.01"/></symbol>
+  <symbol id="i-flow" viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="6" rx="1.5"/><rect x="15" y="15" width="6" height="6" rx="1.5"/><path d="M9 6h4a3 3 0 0 1 3 3v6"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 21h18M6 17v-5M11 17V7M16 17v-8M21 17V4"/></symbol>
+  <symbol id="i-bot" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V5M9 13v1M15 13v1M9.5 17h5"/><circle cx="12" cy="4" r="1"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+  <symbol id="i-mega" viewBox="0 0 24 24"><path d="M3 11v2a1 1 0 0 0 1 1h3l6 4V6L7 10H4a1 1 0 0 0-1 1z"/><path d="M17 8a5 5 0 0 1 0 8"/></symbol>
+  <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></symbol>
+  <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M16 3.1a4 4 0 0 1 0 7.8M22 21a7 7 0 0 0-5-6.7"/></symbol>
+  <symbol id="i-building" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M9 22v-4h6v4M8 6h.01M12 6h.01M16 6h.01M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01"/></symbol>
+  <symbol id="i-rocket" viewBox="0 0 24 24"><path d="M5 15c-1.5 1.3-2 5-2 5s3.7-.5 5-2c.7-.8.7-2.1-.1-2.9a2.2 2.2 0 0 0-2.9-.1zM12 15l-3-3a22 22 0 0 1 2-4A13 13 0 0 1 22 2c0 2.7-.8 7.5-6 11a22 22 0 0 1-4 2z"/><path d="M9 12H4s.6-3 2-4c1.6-1.1 5 0 5 0M12 15v5s3-.6 4-2c1.1-1.6 0-5 0-5"/></symbol>
+  <symbol id="i-store" viewBox="0 0 24 24"><path d="M3 9 5 3h14l2 6M3 9v11h18V9M3 9h18M9 20v-6h6v6"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
+  <symbol id="i-headset" viewBox="0 0 24 24"><path d="M3 14v-2a9 9 0 0 1 18 0v2"/><rect x="2" y="14" width="5" height="7" rx="2"/><rect x="17" y="14" width="5" height="7" rx="2"/></symbol>
+  <symbol id="i-rupee" viewBox="0 0 24 24"><path d="M6 3h12M6 8h12M6 13l8.5 8M6 13h3a5 5 0 0 0 0-10"/></symbol>
+  <symbol id="i-truck" viewBox="0 0 24 24"><path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/></symbol>
+  <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></symbol>
+  <symbol id="i-whatsapp" viewBox="0 0 32 32"><path fill="currentColor" stroke="none" d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3zm0 23.7a10.7 10.7 0 0 1-5.5-1.5l-.4-.2-3.9 1 1-3.8-.3-.4A10.7 10.7 0 1 1 16 26.7zm5.9-8c-.3-.2-1.9-1-2.2-1s-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5 1-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.6 3.6 0 0 0-1.1 2.7 6.3 6.3 0 0 0 1.3 3.3 14.4 14.4 0 0 0 5.5 4.9c2 .9 2.8.9 3.8.8a3.3 3.3 0 0 0 2.1-1.5 2.7 2.7 0 0 0 .2-1.5c-.1-.1-.3-.2-.6-.4z"/></symbol>
+</svg>
+
+<div class="progress" id="progress"></div>
+
+<!-- ============ NAVBAR ============ -->
+<header class="nav" id="nav">
+  <div class="container nav-inner">
+    <a href="#home" class="brand" aria-label="Workflash Automation home">
+      <img src="assets/logo-mark.png" alt="" class="brand-mark" width="34" height="46" />
+      <img src="assets/wordmark-white.png" alt="Workflash Automation" class="brand-word on-dark" width="168" height="40" />
+      <img src="assets/wordmark.png" alt="Workflash Automation" class="brand-word on-light" width="168" height="40" />
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#services">Services</a>
+      <a href="#journey">Automation Journey</a>
+      <a href="#solutions">Solutions</a>
+      <a href="#python-lab">Python Lab</a>
+      <a href="#roi">ROI</a>
+      <a href="#about">About</a>
+      <a href="#quote" class="btn btn-primary btn-sm">Get a Quote</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero dark" id="home">
+  <canvas id="net" aria-hidden="true"></canvas>
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <span class="badge"><span class="live"></span>Since 2021 · AI Automation Specialists</span>
+      <h1>From your first workflow to a <span class="grad-text">fully autonomous</span> business.</h1>
+      <p class="hero-rotate">We automate <span class="rotator" id="rotator">lead follow-ups</span><span class="caret">|</span></p>
+      <p class="lead">Workflash Automation designs and builds AI, Python and no-code automation for companies of every size. We start with the small daily tasks and take you step by step to complete, data-driven automation.</p>
+      <div class="hero-cta">
+        <a href="#quote" class="btn btn-primary btn-lg">Get a Free Quote <svg class="ic"><use href="#i-arrow"/></svg></a>
+        <a href="#assessment" class="btn btn-outline btn-lg">Check Automation Score</a>
+      </div>
+      <div class="hero-proof">
+        <div><strong id="yearsExp">5+</strong><span>Years in automation</span></div>
+        <div><strong>5</strong><span>Levels: basic → autonomous</span></div>
+        <div><strong>24/7</strong><span>Bots that never sleep</span></div>
+      </div>
+    </div>
+
+    <!-- Automation pipeline visual -->
+    <div class="hero-visual">
+      <div class="console">
+        <div class="console-head">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="mono">workflash://pipeline/lead-to-revenue</span>
+          <span class="status"><span class="live"></span>Running</span>
+        </div>
+        <svg class="pipe" viewBox="0 0 520 380" role="img" aria-label="Automation pipeline: new lead, AI qualification, CRM update, WhatsApp follow-up and live dashboard">
+          <defs>
+            <linearGradient id="gLine" x1="0" x2="1"><stop offset="0" stop-color="#1BC8F5" stop-opacity=".2"/><stop offset=".5" stop-color="#1BC8F5"/><stop offset="1" stop-color="#0B5CFF" stop-opacity=".2"/></linearGradient>
+            <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <path id="p1" d="M170 60 H350" class="wire"/>
+          <path id="p2" d="M425 88 C425 150 340 150 335 188" class="wire"/>
+          <path id="p3" d="M190 215 C95 215 95 270 95 318" class="wire"/>
+          <path id="p4" d="M335 242 C335 290 425 280 425 318" class="wire"/>
+          <circle r="4" class="pulse-dot" filter="url(#glow)"><animateMotion dur="2.2s" repeatCount="indefinite"><mpath href="#p1"/></animateMotion></circle>
+          <circle r="4" class="pulse-dot" filter="url(#glow)"><animateMotion dur="2.2s" begin=".7s" repeatCount="indefinite"><mpath href="#p2"/></animateMotion></circle>
+          <circle r="4" class="pulse-dot" filter="url(#glow)"><animateMotion dur="2.2s" begin="1.4s" repeatCount="indefinite"><mpath href="#p3"/></animateMotion></circle>
+          <circle r="4" class="pulse-dot" filter="url(#glow)"><animateMotion dur="2.2s" begin="1.4s" repeatCount="indefinite"><mpath href="#p4"/></animateMotion></circle>
+
+          <g class="node" transform="translate(20 32)"><rect width="150" height="56" rx="12"/><text x="16" y="24" class="n-t">New Lead</text><text x="16" y="42" class="n-s">IndiaMART · Meta Ads</text></g>
+          <g class="node" transform="translate(350 32)"><rect width="150" height="56" rx="12"/><text x="16" y="24" class="n-t">AI Qualifies</text><text x="16" y="42" class="n-s">Score: Hot · 92%</text></g>
+          <g class="node core" transform="translate(190 188)"><rect width="145" height="56" rx="12"/><text x="16" y="24" class="n-t">CRM Updated</text><text x="16" y="42" class="n-s">Assigned → Sales</text></g>
+          <g class="node" transform="translate(20 318)"><rect width="150" height="56" rx="12"/><text x="16" y="24" class="n-t">WhatsApp Reply</text><text x="16" y="42" class="n-s">Sent in 4 sec</text></g>
+          <g class="node" transform="translate(350 318)"><rect width="150" height="56" rx="12"/><text x="16" y="24" class="n-t">Live Dashboard</text><text x="16" y="42" class="n-s">Power BI · Sheets</text></g>
+        </svg>
+        <div class="console-log mono" id="consoleLog">
+          <div><span class="ok">✓</span> 10:42:07 lead #4821 captured from IndiaMART</div>
+          <div><span class="ok">✓</span> 10:42:08 AI score = 0.92 → HOT</div>
+          <div><span class="ok">✓</span> 10:42:11 WhatsApp brochure sent</div>
+        </div>
+      </div>
+      <div class="chip-float cf-1"><svg class="ic"><use href="#i-bot"/></svg> AI Agent online</div>
+      <div class="chip-float cf-2"><svg class="ic"><use href="#i-code"/></svg> Python job finished · 0.8s</div>
+    </div>
+  </div>
+
+  <div class="marquee" aria-label="Technologies we work with">
+    <div class="marquee-track">
+      <span>Python</span><span>Anaconda</span><span>Pandas</span><span>Jupyter</span><span>OpenAI</span><span>Claude AI</span><span>WhatsApp Business API</span><span>n8n</span><span>Make</span><span>Zapier</span><span>Power BI</span><span>Google Sheets</span><span>Excel VBA</span><span>Zoho</span><span>HubSpot</span><span>Selenium RPA</span><span>REST APIs</span><span>MySQL</span>
+      <span>Python</span><span>Anaconda</span><span>Pandas</span><span>Jupyter</span><span>OpenAI</span><span>Claude AI</span><span>WhatsApp Business API</span><span>n8n</span><span>Make</span><span>Zapier</span><span>Power BI</span><span>Google Sheets</span><span>Excel VBA</span><span>Zoho</span><span>HubSpot</span><span>Selenium RPA</span><span>REST APIs</span><span>MySQL</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VALUE STRIP ============ -->
+<section class="strip">
+  <div class="container strip-grid">
+    <div class="strip-item reveal"><svg class="ic"><use href="#i-clock"/></svg><div><strong><span data-count="70">0</span>%</strong><span>less repetitive manual work*</span></div></div>
+    <div class="strip-item reveal"><svg class="ic"><use href="#i-zap"/></svg><div><strong>&lt; <span data-count="5">0</span> sec</strong><span>lead response time, 24/7</span></div></div>
+    <div class="strip-item reveal"><svg class="ic"><use href="#i-chart"/></svg><div><strong><span data-count="10">0</span>x</strong><span>faster reporting with live data</span></div></div>
+    <div class="strip-item reveal"><svg class="ic"><use href="#i-rocket"/></svg><div><strong><span data-count="7">0</span> days</strong><span>to your first live automation</span></div></div>
+  </div>
+  <p class="container note">*Indicative outcomes. Actual results depend on your processes and scope.</p>
+</section>
+
+<!-- ============ SERVICES ============ -->
+<section class="section" id="services">
+  <div class="container">
+    <div class="head reveal">
+      <span class="eyebrow">Capabilities</span>
+      <h2>One partner for every layer of automation</h2>
+      <p>No-code workflows, custom Python engineering and generative AI, combined into systems that fit how your business actually runs.</p>
+    </div>
+    <div class="svc-grid">
+      <article class="svc reveal"><div class="svc-ic"><svg class="ic"><use href="#i-chat"/></svg></div><h3>WhatsApp &amp; AI Chatbots</h3><p>Instant replies, lead qualification, catalogues, payment reminders and broadcasts on WhatsApp, website and Instagram.</p><span class="tag">Level 1–4</span></article>
+      <article class="svc reveal"><div class="svc-ic"><svg class="ic"><use href="#i-flow"/></svg></div><h3>Workflow &amp; CRM Automation</h3><p>IndiaMART, JustDial, Meta Ads and forms flow into your CRM. Leads are routed, tracked and followed up automatically.</p><span class="tag">Level 2</span></article>
+      <article class="svc reveal"><div class="svc-ic"><svg class="ic"><use href="#i-chart"/></svg></div><h3>Data Analytics &amp; MIS</h3><p>Sales, lead, call and incentive dashboards in Excel, Google Sheets or Power BI that refresh automatically.</p><span class="tag">Level 3</span></article>
+      <article class="svc reveal"><div class="svc-ic"><svg class="ic"><use href="#i-code"/></svg></div><h3>Python &amp; Anaconda Engineering</h3><p>Custom Python scripts, data pipelines, scrapers, report generators and ML models, built and tested in Anaconda environments.</p><span class="tag">Level 3–5</span></article>
+      <article class="svc reveal"><div class="svc-ic"><svg class="ic"><use href="#i-bot"/></svg></div><h3>Custom AI Agents</h3><p>GPT and Claude powered agents trained on your data. They draft quotes, answer customers, summarise documents and assist staff.</p><span class="tag">Level 4</span></article>
+      <article class="svc reveal"><div class="svc-ic"><svg class="ic"><use href="#i-doc"/></svg></div><h3>Document AI &amp; RPA</h3><p>Extract data from invoices, PDFs and forms. Bots fill portals, generate quotations and send emails without human clicks.</p><span class="tag">Level 3–4</span></article>
+      <article class="svc reveal"><div class="svc-ic"><svg class="ic"><use href="#i-db"/></svg></div><h3>System Integration &amp; APIs</h3><p>Connect ERP, Tally, CRM, e-commerce and accounting tools so data moves once and stays in sync everywhere.</p><span class="tag">Level 2–5</span></article>
+      <article class="svc reveal"><div class="svc-ic"><svg class="ic"><use href="#i-cpu"/></svg></div><h3>Autonomous Operations</h3><p>Multi-agent systems, predictive forecasting and self-running processes with human approval only where it matters.</p><span class="tag">Level 5</span></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AUTOMATION JOURNEY ============ -->
+<section class="section dark journey-sec" id="journey">
+  <div class="container">
+    <div class="head reveal">
+      <span class="eyebrow">The Workflash Automation Journey</span>
+      <h2>From small tasks to a fully automated company</h2>
+      <p>Every business sits somewhere on this ladder. We meet you where you are and move you up one level at a time, with measurable results at each step.</p>
+    </div>
+    <div class="journey reveal">
+      <div class="levels" id="levels" role="tablist" aria-label="Automation levels"></div>
+      <div class="level-panel" id="levelPanel" role="tabpanel"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SOLUTIONS BY SIZE ============ -->
+<section class="section" id="solutions">
+  <div class="container">
+    <div class="head reveal">
+      <span class="eyebrow">Solutions for every size</span>
+      <h2>Whether you have 3 people or 3,000</h2>
+      <p>The same engineering discipline, scaled to your budget and complexity.</p>
+    </div>
+    <div class="tiers">
+      <article class="tier reveal">
+        <div class="tier-ic"><svg class="ic"><use href="#i-store"/></svg></div>
+        <h3>Small Business &amp; Startups</h3>
+        <p class="tier-sub">Shops, clinics, coaching, local brands, 1–20 people</p>
+        <ul>
+          <li><svg class="ic"><use href="#i-check"/></svg>WhatsApp auto-reply &amp; catalogue bot</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Google Sheets lead tracker with reminders</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Automatic invoices &amp; payment follow-ups</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Daily sales summary on WhatsApp</li>
+        </ul>
+        <div class="tier-foot"><span>Typical go-live</span><strong>3–7 days</strong></div>
+        <a href="#quote" class="btn btn-ghost full" data-size="Small Business">Get a starter quote</a>
+      </article>
+      <article class="tier featured reveal">
+        <span class="ribbon">Most requested</span>
+        <div class="tier-ic"><svg class="ic"><use href="#i-building"/></svg></div>
+        <h3>Growing SMEs</h3>
+        <p class="tier-sub">Manufacturers, traders, real estate, D2C, 20–500 people</p>
+        <ul>
+          <li><svg class="ic"><use href="#i-check"/></svg>Multi-source lead routing into CRM</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Salesperson-wise live dashboards</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Python-based MIS &amp; incentive reports</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>AI chatbot + human hand-off</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Tally / ERP data sync</li>
+        </ul>
+        <div class="tier-foot"><span>Typical go-live</span><strong>2–4 weeks</strong></div>
+        <a href="#quote" class="btn btn-primary full" data-size="Growing SME">Get a growth quote</a>
+      </article>
+      <article class="tier reveal">
+        <div class="tier-ic"><svg class="ic"><use href="#i-layers"/></svg></div>
+        <h3>Enterprise</h3>
+        <p class="tier-sub">Multi-location, multi-department organisations</p>
+        <ul>
+          <li><svg class="ic"><use href="#i-check"/></svg>Custom AI agents on private data</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>End-to-end process automation &amp; RPA</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Data warehouse &amp; predictive analytics</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Audit logs, access control &amp; SLAs</li>
+        </ul>
+        <div class="tier-foot"><span>Typical roll-out</span><strong>Phased, 1–3 months</strong></div>
+        <a href="#quote" class="btn btn-ghost full" data-size="Enterprise">Talk to an expert</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DEPARTMENTS ============ -->
+<section class="section soft" id="departments">
+  <div class="container">
+    <div class="head reveal">
+      <span class="eyebrow">Automation by department</span>
+      <h2>Every team gets its hours back</h2>
+      <p>Pick a department to see what we typically automate, and how much time it saves.</p>
+    </div>
+    <div class="dept reveal">
+      <div class="dept-tabs" id="deptTabs" role="tablist"></div>
+      <div class="dept-body" id="deptBody"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PYTHON LAB ============ -->
+<section class="section dark lab-sec" id="python-lab">
+  <div class="container">
+    <div class="head reveal">
+      <span class="eyebrow">Live Python Lab</span>
+      <h2>Real Python, running right here in your browser</h2>
+      <p>This is how we think: data first. Press <b>Run</b> to execute the Python analysis below on 600 sample leads. It runs live on WebAssembly Python (Pyodide, the engine behind Anaconda's PyScript). You can edit the code too.</p>
+    </div>
+    <div class="lab reveal">
+      <div class="editor">
+        <div class="editor-head">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="mono">lead_intelligence.py</span>
+          <button class="btn btn-primary btn-sm" id="runPy"><svg class="ic"><use href="#i-play"/></svg> Run Python</button>
+        </div>
+        <textarea id="pyCode" spellcheck="false" aria-label="Python code editor"></textarea>
+      </div>
+      <div class="output">
+        <div class="editor-head">
+          <span class="mono">output</span>
+          <span class="mono py-status" id="pyStatus">idle · click Run</span>
+        </div>
+        <pre id="pyOut" class="mono">&gt;&gt;&gt; Ready. Python loads on first run (~5 sec).</pre>
+        <div class="py-chart" id="pyChart" aria-live="polite"></div>
+      </div>
+    </div>
+    <div class="stack reveal">
+      <span>Our Python &amp; Anaconda stack:</span>
+      <b>Anaconda / Conda</b><b>Pandas</b><b>NumPy</b><b>Jupyter</b><b>scikit-learn</b><b>Matplotlib · Plotly</b><b>Selenium</b><b>FastAPI</b><b>OpenPyXL</b><b>LangChain</b>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ROI ============ -->
+<section class="section" id="roi">
+  <div class="container roi">
+    <div class="roi-copy reveal">
+      <span class="eyebrow">ROI Calculator</span>
+      <h2>What is manual work costing you?</h2>
+      <p>Move the sliders to estimate the time and money automation could save your company every year.</p>
+      <div class="roi-controls">
+        <label><span>Team members doing repetitive work</span><output id="oPeople">10</output><input type="range" id="people" min="1" max="200" value="10" /></label>
+        <label><span>Hours per person per day on manual tasks</span><output id="oHours">3</output><input type="range" id="hours" min="1" max="8" value="3" /></label>
+        <label><span>Average monthly salary</span><output id="oSalary">₹25,000</output><input type="range" id="salary" min="10000" max="150000" step="5000" value="25000" /></label>
+        <label><span>Share of that work we can automate</span><output id="oAuto">60%</output><input type="range" id="auto" min="20" max="90" step="5" value="60" /></label>
+      </div>
+    </div>
+    <div class="roi-card reveal">
+      <div class="roi-main">
+        <small>Estimated yearly savings</small>
+        <strong id="rMoney">₹0</strong>
+        <span class="roi-3y">≈ <b id="r3y">₹0</b> over 3 years</span>
+      </div>
+      <div class="roi-kpis">
+        <div><small>Hours saved / month</small><strong id="rHours">0</strong></div>
+        <div><small>Full-time staff freed</small><strong id="rFte">0</strong></div>
+      </div>
+      <div class="roi-bars" aria-hidden="true">
+        <div><span>Before</span><div class="rb"><i id="bBefore" style="width:100%"></i></div><em id="tBefore"></em></div>
+        <div><span>After</span><div class="rb"><i id="bAfter" class="after"></i></div><em id="tAfter"></em></div>
+      </div>
+      <p class="note">Assumes 26 working days/month and 8-hour days. Indicative only.</p>
+      <a href="#quote" class="btn btn-primary full" id="roiQuote">Get my exact savings plan</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ASSESSMENT ============ -->
+<section class="section soft" id="assessment">
+  <div class="container narrow">
+    <div class="head reveal">
+      <span class="eyebrow">Free Automation Readiness Score</span>
+      <h2>Where does your company stand today?</h2>
+      <p>Answer 6 quick questions. You get your automation level instantly, plus a recommended next step.</p>
+    </div>
+    <div class="quiz reveal" id="quiz">
+      <div class="quiz-top"><span id="qCount">Question 1 of 6</span><div class="qbar"><i id="qBar"></i></div></div>
+      <div id="qBody"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROCESS ============ -->
+<section class="section" id="process">
+  <div class="container">
+    <div class="head reveal">
+      <span class="eyebrow">How we deliver</span>
+      <h2>A proven 6-step delivery process</h2>
+    </div>
+    <ol class="timeline">
+      <li class="reveal"><span>01</span><h4>Free Audit</h4><p>We map your current process and find the hours being lost.</p></li>
+      <li class="reveal"><span>02</span><h4>Blueprint &amp; Quote</h4><p>A clear plan: what gets automated, cost, timeline and expected ROI.</p></li>
+      <li class="reveal"><span>03</span><h4>Build</h4><p>Engineering with Python, AI and no-code tools, in a secure staging setup.</p></li>
+      <li class="reveal"><span>04</span><h4>Test with Real Data</h4><p>Nothing goes live until it works with your actual data and edge cases.</p></li>
+      <li class="reveal"><span>05</span><h4>Launch &amp; Train</h4><p>Go live with documentation and hands-on training for your team.</p></li>
+      <li class="reveal"><span>06</span><h4>Monitor &amp; Scale</h4><p>Dashboards, support and the next level of your automation journey.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section class="section soft" id="about">
+  <div class="container about">
+    <div class="about-card reveal">
+      <img src="assets/logo-full.png" alt="Workflash Automation by A.G. logo" class="about-logo" width="900" height="683" />
+      <div class="since"><span>Est.</span><strong>2021</strong></div>
+      <div class="founder">
+        <div class="avatar">AG</div>
+        <div><h3>Ankush Goswami</h3><p>Founder &amp; Automation Lead</p></div>
+      </div>
+      <div class="founder-links">
+        <a href="tel:+917210876636"><svg class="ic"><use href="#i-phone"/></svg>+91 72108 76636</a>
+        <a href="tel:+919354676636"><svg class="ic"><use href="#i-phone"/></svg>+91 93546 76636</a>
+        <a href="mailto:Workflashspace@gmail.com"><svg class="ic"><use href="#i-mail"/></svg>Workflashspace@gmail.com</a>
+      </div>
+    </div>
+    <div class="about-copy reveal">
+      <span class="eyebrow">About Workflash</span>
+      <h2>Automating businesses since 2021</h2>
+      <p>Workflash Automation is a technology company specialising in AI automation. Since 2021 we have helped businesses swap repetitive manual work for reliable automated systems. It began with Excel macros and WhatsApp workflows, and today includes Python data pipelines and generative AI agents.</p>
+      <p>We combine automation engineering with data analytics. That means every project is measured: hours saved, response time and revenue impact. We don't sell generic software. We build what fits your business.</p>
+      <div class="why">
+        <div><svg class="ic"><use href="#i-target"/></svg><strong>ROI-first</strong><span>Every project starts with numbers and a business case.</span></div>
+        <div><svg class="ic"><use href="#i-shield"/></svg><strong>Secure by design</strong><span>Your accounts, your data, role-based access.</span></div>
+        <div><svg class="ic"><use href="#i-headset"/></svg><strong>Real support</strong><span>Direct access to the builder, not a ticket queue.</span></div>
+        <div><svg class="ic"><use href="#i-sparkle"/></svg><strong>Future-ready</strong><span>Built to grow from Level 1 to Level 5.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="section" id="faq">
+  <div class="container narrow">
+    <div class="head reveal"><span class="eyebrow">FAQ</span><h2>Questions clients ask us</h2></div>
+    <div class="faq reveal">
+      <details><summary>We are a small business. Is automation worth it for us?</summary><p>Yes. Small teams often benefit the most, because every hour saved goes straight to sales and customers. We start with low-cost Level 1–2 automations that pay back quickly.</p></details>
+      <details><summary>Do we need technical staff?</summary><p>No. We build, set up and train your team. You keep using familiar tools like WhatsApp, Excel, Google Sheets or a simple dashboard.</p></details>
+      <details><summary>Why Python and Anaconda?</summary><p>Python is the world's leading language for data and AI. Anaconda gives us stable, reproducible environments, so the analytics, reports and AI models we build run reliably on your systems.</p></details>
+      <details><summary>How long does a project take?</summary><p>Simple automations go live in 3–7 days. Multi-system projects typically take 2–6 weeks, and enterprise roll-outs are phased.</p></details>
+      <details><summary>Is our data safe?</summary><p>Yes. We work in your own accounts wherever possible, use access controls, and never share or resell your data.</p></details>
+      <details><summary>How is pricing decided?</summary><p>Pricing depends on scope and complexity. After a free audit you get a fixed quote along with the expected savings, with no hidden costs.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUOTE ============ -->
+<section class="section dark quote-sec" id="quote">
+  <div class="container quote">
+    <div class="quote-copy reveal">
+      <span class="eyebrow">Request a Quote</span>
+      <h2>Let's automate your business.</h2>
+      <p>Tell us what slows your team down. Within 24 hours you get a free automation blueprint with a clear quote and ROI estimate.</p>
+      <div class="contact-list">
+        <a class="c-item" href="tel:+917210876636"><svg class="ic"><use href="#i-phone"/></svg><div><small>Call</small>+91 72108 76636</div></a>
+        <a class="c-item" href="tel:+919354676636"><svg class="ic"><use href="#i-phone"/></svg><div><small>Call</small>+91 93546 76636</div></a>
+        <a class="c-item" href="mailto:Workflashspace@gmail.com"><svg class="ic"><use href="#i-mail"/></svg><div><small>Email</small>Workflashspace@gmail.com</div></a>
+        <a class="c-item wa" href="https://wa.me/917210876636?text=Hi%20Workflash%2C%20I%20want%20a%20quote%20for%20automation" target="_blank" rel="noopener"><svg class="ic"><use href="#i-whatsapp"/></svg><div><small>WhatsApp</small>Chat with us now</div></a>
+      </div>
+      <ul class="promise">
+        <li><svg class="ic"><use href="#i-check"/></svg>Free audit, no obligation</li>
+        <li><svg class="ic"><use href="#i-check"/></svg>Fixed, transparent pricing</li>
+        <li><svg class="ic"><use href="#i-check"/></svg>Response within 24 hours</li>
+      </ul>
+    </div>
+    <form class="form reveal" id="quoteForm" novalidate>
+      <h3>Get your free quote</h3>
+      <div class="row">
+        <label>Full name*<input type="text" name="name" placeholder="Your name" autocomplete="name" /></label>
+        <label>Mobile*<input type="tel" name="phone" placeholder="10-digit mobile" autocomplete="tel" /></label>
+      </div>
+      <div class="row">
+        <label>Email<input type="email" name="email" placeholder="you@company.com" autocomplete="email" /></label>
+        <label>Company<input type="text" name="company" placeholder="Company name" autocomplete="organization" /></label>
+      </div>
+      <div class="row">
+        <label>Company size
+          <select name="size"><option>Small Business</option><option>Growing SME</option><option>Enterprise</option></select>
+        </label>
+        <label>Timeline
+          <select name="timeline"><option>As soon as possible</option><option>Within 1 month</option><option>1–3 months</option><option>Just exploring</option></select>
+        </label>
+      </div>
+      <fieldset>
+        <legend>What do you want to automate?</legend>
+        <div class="checks">
+          <label><input type="checkbox" name="svc" value="WhatsApp / Chatbot" /><span>WhatsApp / Chatbot</span></label>
+          <label><input type="checkbox" name="svc" value="CRM & Leads" /><span>CRM &amp; Leads</span></label>
+          <label><input type="checkbox" name="svc" value="Reports & Dashboards" /><span>Reports &amp; Dashboards</span></label>
+          <label><input type="checkbox" name="svc" value="Python / Data" /><span>Python / Data</span></label>
+          <label><input type="checkbox" name="svc" value="AI Agent" /><span>AI Agent</span></label>
+          <label><input type="checkbox" name="svc" value="Full Automation" /><span>Full Automation</span></label>
+        </div>
+      </fieldset>
+      <label>Tell us about your process<textarea name="message" rows="3" placeholder="e.g. We get 200 leads a month from IndiaMART and follow up manually…"></textarea></label>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" data-via="whatsapp"><svg class="ic"><use href="#i-whatsapp"/></svg> Send on WhatsApp</button>
+        <button type="submit" class="btn btn-ghost-dark" data-via="email"><svg class="ic"><use href="#i-mail"/></svg> Send via Email</button>
+      </div>
+      <p class="form-note" id="formNote" role="status"></p>
+    </form>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="f-brand">
+      <img src="assets/logo-full-white.png" alt="Workflash Automation by A.G." width="900" height="683" />
+      <p>AI Automation Specialists since 2021. From your first workflow to a fully autonomous business.</p>
+    </div>
+    <div>
+      <h5>Services</h5>
+      <a href="#services">WhatsApp &amp; Chatbots</a><a href="#services">CRM Automation</a><a href="#services">Python &amp; Analytics</a><a href="#services">AI Agents</a><a href="#services">Autonomous Ops</a>
+    </div>
+    <div>
+      <h5>Explore</h5>
+      <a href="#journey">Automation Journey</a><a href="#python-lab">Python Lab</a><a href="#roi">ROI Calculator</a><a href="#assessment">Readiness Score</a><a href="#faq">FAQ</a>
+    </div>
+    <div>
+      <h5>Contact</h5>
+      <a href="tel:+917210876636">+91 72108 76636</a><a href="tel:+919354676636">+91 93546 76636</a><a href="mailto:Workflashspace@gmail.com">Workflashspace@gmail.com</a>
+      <a href="#quote" class="btn btn-primary btn-sm f-cta">Get a Quote</a>
+    </div>
+  </div>
+  <div class="container copyright">
+    <span>© <span id="year"></span> Workflash Automation. All rights reserved.</span>
+    <span>Founded by Ankush Goswami · Est. 2021</span>
+  </div>
+</footer>
+
+<a class="wa-float" href="https://wa.me/917210876636" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><svg><use href="#i-whatsapp"/></svg></a>
+<button class="to-top" id="toTop" aria-label="Back to top"><svg class="ic"><use href="#i-arrow"/></svg></button>
+
+<!-- Python source for the live lab (same as python/lead_intelligence.py) -->
+<script type="text/plain" id="pySource"># Workflash Lead Intelligence: runs 100% in your browser
+import random, statistics
+from collections import defaultdict
+
+random.seed(2021)
+SOURCES = ["IndiaMART", "JustDial", "Meta Ads", "Website", "WhatsApp"]
+QUALITY = {"IndiaMART": .30, "JustDial": .22, "Meta Ads": .26,
+           "Website": .38, "WhatsApp": .45}
+
+# 1) Simulate 600 leads: manual follow-up vs Workflash automation
+leads = []
+for i in range(600):
+    src = random.choice(SOURCES)
+    automated = i % 2 == 0
+    reply_min = random.uniform(0.05, 0.1) if automated else random.expovariate(1/95)
+    # faster replies convert better (decay after first 5 minutes)
+    p = QUALITY[src] * (1.0 if reply_min < 5 else max(0.35, 1 - reply_min/300))
+    leads.append((src, automated, reply_min, random.random() < p))
+
+# 2) Analyse
+def rate(rows):
+    return 100 * sum(r[3] for r in rows) / max(1, len(rows))
+
+manual = [l for l in leads if not l[1]]
+auto   = [l for l in leads if l[1]]
+print(f"Leads analysed        : {len(leads)}")
+print(f"Avg reply (manual)    : {statistics.mean(l[2] for l in manual):6.1f} min")
+print(f"Avg reply (automated) : {statistics.mean(l[2] for l in auto)*60:6.1f} sec")
+print(f"Conversion manual     : {rate(manual):5.1f} %")
+print(f"Conversion automated  : {rate(auto):5.1f} %")
+print(f"Uplift                : +{rate(auto) - rate(manual):.1f} pts\n")
+
+by_src = defaultdict(lambda: {"m": [], "a": []})
+for l in leads:
+    by_src[l[0]]["a" if l[1] else "m"].append(l)
+
+print(f"{'Source':<10}{'Manual %':>10}{'Auto %':>10}")
+result = {}
+for s in SOURCES:
+    m, a = rate(by_src[s]["m"]), rate(by_src[s]["a"])
+    result[s] = [round(m, 1), round(a, 1)]
+    print(f"{s:<10}{m:>10.1f}{a:>10.1f}")
+
+best = max(result, key=lambda s: result[s][1])
+print(f"\nInsight: automate '{best}' first for the biggest win.")
+result  # returned to the page to draw the chart
+</script>
+
+<script src="js/main.js"></script>
+</body>
+</html>
