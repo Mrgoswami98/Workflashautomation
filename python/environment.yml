@@ -1,0 +1,16 @@
+# Anaconda environment for Workflash Automation Python tools
+#   conda env create -f environment.yml
+#   conda activate workflash
+name: workflash
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pandas
+  - numpy
+  - openpyxl
+  - matplotlib
+  - jupyterlab
+  - scikit-learn
+  - requests
