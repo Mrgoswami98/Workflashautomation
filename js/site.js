@@ -8,6 +8,8 @@ window.WF = {
   // Google Apps Script web-app URL that saves every enquiry into a Google Sheet.
   // Leave empty to only use WhatsApp / email.  e.g. 'https://script.google.com/macros/s/XXXX/exec'
   FORM_ENDPOINT: '',
+  // Flash 5.0 chat uses the same Apps Script URL. Only fill this if you deploy a separate script for chat.
+  CHAT_ENDPOINT: '',
   // Google Analytics 4 Measurement ID, e.g. 'G-ABC123XYZ'. Leave empty to disable.
   GA4_ID: '',
   // Meta (Facebook/Instagram) Pixel ID, e.g. '123456789012345'. Leave empty to disable.

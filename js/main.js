@@ -450,6 +450,17 @@
     if (b) prefill(`Interested in Level ${b.dataset.level}: ${LEVELS[b.dataset.level - 1].name}.`);
   });
 
+  // chat summary handed over from Flash 5.0 on another page
+  try {
+    const pre = JSON.parse(sessionStorage.getItem('wf_prefill') || 'null');
+    if (pre && pre.text) {
+      form.message.value = pre.text + (form.message.value ? '\n' + form.message.value : '');
+      const box = pre.project && $$('input[name=svc]', form).find((c) => c.value === pre.project);
+      if (box) box.checked = true;
+      sessionStorage.removeItem('wf_prefill');
+    }
+  } catch (err) {}
+
   let via = 'whatsapp';
   $$('button[type=submit]', form).forEach((b) => b.addEventListener('click', () => { via = b.dataset.via; }));
   form.addEventListener('submit', (e) => {
