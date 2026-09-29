@@ -7,62 +7,18 @@
   const inr = (n) => '₹' + Math.round(n).toLocaleString('en-IN');
   const icon = (id) => `<svg class="ic"><use href="#i-${id}"/></svg>`;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const WA_NUMBER = '917210876636';
-  const EMAIL = 'Workflashspace@gmail.com';
+  const { WA_NUMBER, EMAIL, FORM_ENDPOINT } = window.WF;
+  const track = window.WF.track;
   const FOUNDED = 2021;
 
-  // ---------- Site settings (fill these in, see README) ----------
-  // Google Apps Script web-app URL that saves every enquiry into a Google Sheet.
-  // Leave empty to only use WhatsApp / email.  e.g. 'https://script.google.com/macros/s/XXXX/exec'
-  const FORM_ENDPOINT = '';
-  // Google Analytics 4 Measurement ID, e.g. 'G-ABC123XYZ'. Leave empty to disable.
-  const GA4_ID = '';
-  // Meta (Facebook/Instagram) Pixel ID, e.g. '123456789012345'. Leave empty to disable.
-  const META_PIXEL_ID = '';
-
-  // ---------- Analytics (loads only when an ID is set) ----------
-  if (GA4_ID) {
-    const s = document.createElement('script');
-    s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA4_ID;
-    document.head.appendChild(s);
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function () { window.dataLayer.push(arguments); };
-    window.gtag('js', new Date());
-    window.gtag('config', GA4_ID);
-  }
-  if (META_PIXEL_ID) {
-    /* eslint-disable */
-    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-    /* eslint-enable */
-    window.fbq('init', META_PIXEL_ID);
-    window.fbq('track', 'PageView');
-  }
-  const track = (name, params = {}) => {
-    try { if (window.gtag) window.gtag('event', name, params); } catch (e) {}
-    try { if (window.fbq && name === 'generate_lead') window.fbq('track', 'Lead', params); } catch (e) {}
-    try { if (window.fbq && name === 'contact') window.fbq('track', 'Contact', params); } catch (e) {}
-  };
-  // WhatsApp / phone / email clicks
-  document.addEventListener('click', (e) => {
-    const a = e.target.closest('a[href]');
-    if (!a) return;
-    const h = a.getAttribute('href');
-    if (h.startsWith('https://wa.me')) track('contact', { method: 'whatsapp' });
-    else if (h.startsWith('tel:')) track('contact', { method: 'phone' });
-    else if (h.startsWith('mailto:')) track('contact', { method: 'email' });
-  });
-
   // ---------- Basics ----------
-  $('#year').textContent = new Date().getFullYear();
   $('#yearsExp').textContent = Math.max(1, new Date().getFullYear() - FOUNDED) + '+';
 
   // ---------- Nav, progress, back-to-top ----------
-  const nav = $('#nav');
   const progress = $('#progress');
   const toTop = $('#toTop');
   const onScroll = () => {
     const y = window.scrollY;
-    nav.classList.toggle('scrolled', y > 40);
     toTop.classList.toggle('show', y > 900);
     const h = document.documentElement.scrollHeight - innerHeight;
     progress.style.width = (h > 0 ? (y / h) * 100 : 0) + '%';
@@ -70,8 +26,6 @@
   onScroll();
   addEventListener('scroll', onScroll, { passive: true });
   toTop.addEventListener('click', () => scrollTo({ top: 0 }));
-  $('#navToggle').addEventListener('click', () => nav.classList.toggle('open'));
-  $$('#navLinks a').forEach((a) => a.addEventListener('click', () => nav.classList.remove('open')));
 
   // Active nav link
   const links = $$('#navLinks a:not(.btn)');
