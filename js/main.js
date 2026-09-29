@@ -417,12 +417,34 @@
     extra = text || '';
     if (!extra) return;
     // replace an earlier auto-filled line of the same kind instead of stacking duplicates
-    const kind = (extra.match(/^(ROI estimate|Automation readiness score|Interested in Level)/) || [])[1];
+    const kind = (extra.match(/^(ROI estimate|Automation readiness score|Interested in Level|Interested in: )/) || [])[1];
     const lines = form.message.value.split('\n').filter((l) => l.trim() && !(kind && l.startsWith(kind)));
     form.message.value = [extra, ...lines].join('\n');
   };
   $('#roiQuote').addEventListener('click', () => prefill(roiSummary));
-  $$('[data-size]').forEach((b) => b.addEventListener('click', () => { form.size.value = b.dataset.size; }));
+  $$('[data-size]').forEach((b) => b.addEventListener('click', () => {
+    form.size.value = b.dataset.size;
+    if (b.dataset.package) form.package.value = b.dataset.package;
+  }));
+  // Live projects: "Get this for my business" ticks the matching checkbox
+  $$('[data-project]').forEach((b) => b.addEventListener('click', () => {
+    const box = $$('input[name=svc]', form).find((c) => c.value === b.dataset.project);
+    if (box) box.checked = true;
+    prefill(`Interested in: ${b.dataset.project} (seen in your live projects).`);
+  }));
+  // Live projects: screenshot lightbox
+  const lb = $('#lightbox');
+  if (lb && typeof lb.showModal === 'function') {
+    const lbImg = $('img', lb);
+    $$('.shot').forEach((b) => b.addEventListener('click', () => {
+      const img = $('img', b);
+      lbImg.src = b.dataset.full; lbImg.alt = img.alt;
+      lb.showModal();
+    }));
+    lb.addEventListener('click', (e) => { if (e.target === lb || e.target.closest('.lb-close')) lb.close(); });
+  } else {
+    $$('.shot').forEach((b) => b.addEventListener('click', () => window.open(b.dataset.full, '_blank', 'noopener')));
+  }
   panel.addEventListener('click', (e) => {
     const b = e.target.closest('[data-level]');
     if (b) prefill(`Interested in Level ${b.dataset.level}: ${LEVELS[b.dataset.level - 1].name}.`);
@@ -449,7 +471,7 @@
       'Hi Workflash Automation, I would like a quote.', '',
       `Name: ${d.name}`, `Mobile: ${d.phone}`,
       d.email && `Email: ${d.email}`, d.company && `Company: ${d.company}`,
-      `Company size: ${d.size}`, `Timeline: ${d.timeline}`,
+      `Company size: ${d.size}`, `Package: ${d.package}`, `Timeline: ${d.timeline}`,
       `Interested in: ${svcs.length ? svcs.join(', ') : 'Not sure yet'}`,
       d.message && `\n${d.message}`,
     ].filter(Boolean).join('\n');
@@ -457,7 +479,7 @@
     if (FORM_ENDPOINT) {
       const payload = new URLSearchParams({
         name: d.name, phone: d.phone, email: d.email || '', company: d.company || '',
-        size: d.size, timeline: d.timeline, services: svcs.join(', '), message: d.message || '',
+        size: d.size, package: d.package, timeline: d.timeline, services: svcs.join(', '), message: d.message || '',
         via, page: location.href, referrer: document.referrer || '', userAgent: navigator.userAgent,
       });
       try { fetch(FORM_ENDPOINT, { method: 'POST', mode: 'no-cors', keepalive: true, body: payload }); } catch (err) {}
