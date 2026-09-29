@@ -169,9 +169,13 @@ function handleChat_(body) {
 
   let reply = '';
   try {
-    reply = provider === 'claude' ? callClaude_(key, model, messages) : callGemini_(key, model, messages);
+    reply = provider === 'claude' ? callClaude_(key, model, messages) : callGeminiWithFallback_(key, model, messages);
   } catch (err) {
     console.error(err);
+    try {
+      sheet_('Chats', CHAT_HEADERS).appendRow([now_(), sid, clean_(body.page), clean_(messages[messages.length - 1].content),
+        'AI ERROR: ' + clean_(String(err).split(key).join('[key]')).slice(0, 600), '', provider]);
+    } catch (e2) { console.error(e2); }
     return { ok: false, reason: 'ai_error' };
   }
   reply = String(reply || '').trim().slice(0, 4000);
@@ -217,6 +221,26 @@ function cleanMessages_(list) {
   });
   while (out.length && out[out.length - 1].role !== 'user') out.pop();
   return out;
+}
+
+// if a model is busy (503), rate-limited (429) or retired (404), try the next one
+const GEMINI_FALLBACKS = ['gemini-3.8-flash', 'gemini-3.7-flash', 'gemini-3.5-flash-lite'];
+function callGeminiWithFallback_(key, model, messages) {
+  const models = [model].concat(GEMINI_FALLBACKS.filter(function (m) { return m !== model; }));
+  const errors = [];
+  for (let i = 0; i < models.length; i++) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try { return callGemini_(key, models[i], messages); }
+      catch (err) {
+        const msg = String(err);
+        errors.push(models[i] + ' -> ' + msg.slice(0, 160));
+        if (!/Gemini (404|429|500|503)/.test(msg)) throw new Error(errors.join('\n'));
+        if (/Gemini (404|429)/.test(msg)) break; // no point retrying this model
+        Utilities.sleep(1200);
+      }
+    }
+  }
+  throw new Error(errors.join('\n'));
 }
 
 function callGemini_(key, model, messages) {
