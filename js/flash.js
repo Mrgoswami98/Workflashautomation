@@ -296,7 +296,7 @@
       content: (m.text || '') + (m.card ? `\n[Suggested: ${m.card.title}]` : '') + (m.pkg ? `\n[Package: ${m.pkg.name} ${m.pkg.price}]` : ''),
     }));
     const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 30000);
+    const timer = setTimeout(() => ctrl.abort(), 45000);
     try {
       const res = await fetch(ENDPOINT, { method: 'POST', body: JSON.stringify({ action: 'chat', sid: S.sid, page: location.href, messages: history }), signal: ctrl.signal });
       const data = await res.json();
