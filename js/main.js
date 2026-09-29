@@ -11,6 +11,47 @@
   const EMAIL = 'Workflashspace@gmail.com';
   const FOUNDED = 2021;
 
+  // ---------- Site settings (fill these in, see README) ----------
+  // Google Apps Script web-app URL that saves every enquiry into a Google Sheet.
+  // Leave empty to only use WhatsApp / email.  e.g. 'https://script.google.com/macros/s/XXXX/exec'
+  const FORM_ENDPOINT = '';
+  // Google Analytics 4 Measurement ID, e.g. 'G-ABC123XYZ'. Leave empty to disable.
+  const GA4_ID = '';
+  // Meta (Facebook/Instagram) Pixel ID, e.g. '123456789012345'. Leave empty to disable.
+  const META_PIXEL_ID = '';
+
+  // ---------- Analytics (loads only when an ID is set) ----------
+  if (GA4_ID) {
+    const s = document.createElement('script');
+    s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA4_ID;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', GA4_ID);
+  }
+  if (META_PIXEL_ID) {
+    /* eslint-disable */
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    /* eslint-enable */
+    window.fbq('init', META_PIXEL_ID);
+    window.fbq('track', 'PageView');
+  }
+  const track = (name, params = {}) => {
+    try { if (window.gtag) window.gtag('event', name, params); } catch (e) {}
+    try { if (window.fbq && name === 'generate_lead') window.fbq('track', 'Lead', params); } catch (e) {}
+    try { if (window.fbq && name === 'contact') window.fbq('track', 'Contact', params); } catch (e) {}
+  };
+  // WhatsApp / phone / email clicks
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href]');
+    if (!a) return;
+    const h = a.getAttribute('href');
+    if (h.startsWith('https://wa.me')) track('contact', { method: 'whatsapp' });
+    else if (h.startsWith('tel:')) track('contact', { method: 'phone' });
+    else if (h.startsWith('mailto:')) track('contact', { method: 'email' });
+  });
+
   // ---------- Basics ----------
   $('#year').textContent = new Date().getFullYear();
   $('#yearsExp').textContent = Math.max(1, new Date().getFullYear() - FOUNDED) + '+';
@@ -213,10 +254,14 @@
   levelsEl.addEventListener('click', (e) => { const b = e.target.closest('.lvl'); if (b) { showLevel(+b.dataset.i); stopAuto(); } });
   showLevel(0);
   // auto-advance until the visitor interacts
+  // (disabled on touch screens so the text doesn't change while someone is reading)
   let autoLvl = 0;
-  const autoTimer = setInterval(() => { autoLvl = (autoLvl + 1) % LEVELS.length; showLevel(autoLvl); }, 6000);
-  const stopAuto = () => clearInterval(autoTimer);
-  panel.addEventListener('mouseenter', stopAuto);
+  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const autoTimer = canHover && !reduceMotion
+    ? setInterval(() => { autoLvl = (autoLvl + 1) % LEVELS.length; showLevel(autoLvl); }, 6000)
+    : null;
+  const stopAuto = () => { if (autoTimer) clearInterval(autoTimer); };
+  ['mouseenter', 'focusin', 'pointerdown'].forEach((ev) => $('.journey').addEventListener(ev, stopAuto));
 
   // ---------- Departments ----------
   const DEPTS = [
@@ -416,7 +461,11 @@
   let extra = '';
   const prefill = (text) => {
     extra = text || '';
-    if (extra) form.message.value = extra + (form.message.value ? '\n' + form.message.value : '');
+    if (!extra) return;
+    // replace an earlier auto-filled line of the same kind instead of stacking duplicates
+    const kind = (extra.match(/^(ROI estimate|Automation readiness score|Interested in Level)/) || [])[1];
+    const lines = form.message.value.split('\n').filter((l) => l.trim() && !(kind && l.startsWith(kind)));
+    form.message.value = [extra, ...lines].join('\n');
   };
   $('#roiQuote').addEventListener('click', () => prefill(roiSummary));
   $$('[data-size]').forEach((b) => b.addEventListener('click', () => { form.size.value = b.dataset.size; }));
@@ -441,6 +490,7 @@
       note.textContent = 'Please enter your name and a valid 10-digit mobile number.';
       return;
     }
+    if (d.website) return; // spam bot filled the hidden field
     const msg = [
       'Hi Workflash Automation, I would like a quote.', '',
       `Name: ${d.name}`, `Mobile: ${d.phone}`,
@@ -449,6 +499,17 @@
       `Interested in: ${svcs.length ? svcs.join(', ') : 'Not sure yet'}`,
       d.message && `\n${d.message}`,
     ].filter(Boolean).join('\n');
+    // 1) save a copy of the enquiry in Google Sheets (fire-and-forget, never blocks WhatsApp)
+    if (FORM_ENDPOINT) {
+      const payload = new URLSearchParams({
+        name: d.name, phone: d.phone, email: d.email || '', company: d.company || '',
+        size: d.size, timeline: d.timeline, services: svcs.join(', '), message: d.message || '',
+        via, page: location.href, referrer: document.referrer || '', userAgent: navigator.userAgent,
+      });
+      try { fetch(FORM_ENDPOINT, { method: 'POST', mode: 'no-cors', keepalive: true, body: payload }); } catch (err) {}
+    }
+    track('generate_lead', { method: via, company_size: d.size });
+    // 2) open WhatsApp / email with the message ready to send
     if (via === 'email') {
       location.href = `mailto:${EMAIL}?subject=${encodeURIComponent('Quote request – ' + d.name + (d.company ? ' (' + d.company + ')' : ''))}&body=${encodeURIComponent(msg)}`;
     } else {
