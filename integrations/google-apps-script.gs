@@ -100,6 +100,7 @@ function doPost(e) {
     if (raw && raw.charAt(0) === '{') body = JSON.parse(raw);
   } catch (err) { body = null; }
   if (body && body.action === 'chat') return json_(handleChat_(body));
+  if (body && body.action === 'log') return json_(handleLog_(body));
   return saveLead_(e);
 }
 
@@ -185,6 +186,22 @@ function handleChat_(body) {
   } catch (err) { console.error(err); }
 
   return { ok: true, reply: reply };
+}
+
+// offline-mode chats (no AI key yet) are sent here just to be saved
+function handleLog_(body) {
+  const sid = String(body.sid || 'anon').replace(/[^\w-]/g, '').slice(0, 64) || 'anon';
+  const cache = CacheService.getScriptCache();
+  const used = Number(cache.get('lg_' + sid) || 0);
+  if (used >= 60) return { ok: false, reason: 'rate_limited' };
+  cache.put('lg_' + sid, String(used + 1), 3600);
+  const user = String(body.user || '').slice(0, 1500);
+  if (!user) return { ok: false, reason: 'empty' };
+  sheet_('Chats', CHAT_HEADERS).appendRow([
+    now_(), sid, clean_(body.page), clean_(user), clean_(String(body.bot || '').slice(0, 3000)),
+    /(?:\+?91[\s-]?)?[6-9]\d{9}/.test(user.replace(/\s/g, '')) ? 'YES' : '', 'offline',
+  ]);
+  return { ok: true };
 }
 
 // keep the last 12 turns, user/assistant only, starting with the visitor, alternating roles
