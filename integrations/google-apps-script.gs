@@ -17,7 +17,7 @@
 const SHEET_NAME = 'Leads';
 const NOTIFY_EMAIL = ''; // e.g. 'Workflashspace@gmail.com'
 const HEADERS = ['Received (IST)', 'Name', 'Mobile', 'Email', 'Company', 'Company size',
-  'Timeline', 'Services', 'Message', 'Sent via', 'Page', 'Referrer', 'Device'];
+  'Package', 'Timeline', 'Services', 'Message', 'Sent via', 'Page', 'Referrer', 'Device'];
 
 function doPost(e) {
   const lock = LockService.getScriptLock();
@@ -35,7 +35,7 @@ function doPost(e) {
     const row = [
       Utilities.formatDate(new Date(), 'Asia/Kolkata', 'yyyy-MM-dd HH:mm:ss'),
       clean(p.name), clean(p.phone), clean(p.email), clean(p.company), clean(p.size),
-      clean(p.timeline), clean(p.services), clean(p.message), clean(p.via),
+      clean(p.package), clean(p.timeline), clean(p.services), clean(p.message), clean(p.via),
       clean(p.page), clean(p.referrer), clean(p.userAgent),
     ];
     sh.appendRow(row);
