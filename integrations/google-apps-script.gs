@@ -8,7 +8,7 @@
  *      Execute as: Me   |   Who has access: Anyone
  *    Click Deploy, allow the permissions, and copy the Web app URL
  *    (it looks like https://script.google.com/macros/s/XXXXXXXX/exec).
- * 4. Paste that URL into FORM_ENDPOINT at the top of js/main.js and commit.
+ * 4. Paste that URL into FORM_ENDPOINT at the top of js/site.js and commit.
  *
  * Every enquiry from the website form is then added as a new row, even if the
  * visitor closes WhatsApp without pressing Send. Optional: set NOTIFY_EMAIL to
