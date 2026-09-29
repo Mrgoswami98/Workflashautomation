@@ -1,7 +1,7 @@
 # Workflash Automation – Website
 
 Official website of **Workflash Automation** — AI Automation Specialists since 2021.
-Founder: Ankush Goswami · 📞 +91 72108 76636 / +91 93546 76636 · ✉️ Workflashspace@gmail.com
+Founder: Ankush Goswami · 📞 +91 93546 76636 · ✉️ Workflashspace@gmail.com
 
 ## What's inside
 ```
@@ -9,6 +9,7 @@ index.html                  → the website (single page)
 css/style.css               → brand styles (navy / blue / cyan from the logo)
 js/site.js                  → shared settings (WhatsApp number, form endpoint, GA4, Meta Pixel), analytics, navbar
 js/main.js                  → home page interactive features
+js/flash.js                 → Flash 5.0 chat assistant (all pages)
 services/*.html             → one SEO page per service
 privacy.html, terms.html    → Privacy Policy and Terms of Use
 assets/                     → logo files (transparent PNG), favicon, founder photo
@@ -48,6 +49,15 @@ conda activate workflash
 python automation_report.py              # demo report with sample data
 python automation_report.py leads.xlsx   # your own lead export
 ```
+
+## Flash 5.0 chat assistant
+`js/flash.js` adds the Flash 5.0 chat to every page.
+- **Without setup** it runs in offline mode: understands English, Hindi and Hinglish, finds the visitor's problem
+  (leads, team tasks, attendance, inventory, reports, WhatsApp, AI) and suggests the matching solution, live project and package.
+- **With AI** it understands and replies in any language. Follow the setup at the top of
+  `integrations/google-apps-script.gs` (add `AI_PROVIDER` and `AI_API_KEY` as Script properties, deploy, paste the URL
+  into `FORM_ENDPOINT`). Chats are saved in the "Chats" sheet; rows where a phone number was shared are marked YES.
+- Business facts, packages and prices for the AI live in `SYSTEM_PROMPT` inside the Apps Script. Update them there when you change prices on the website.
 
 ## Site settings (top of `js/site.js`)
 | Setting | What to put | Where to get it |
