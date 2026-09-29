@@ -7,7 +7,10 @@ Founder: Ankush Goswami · 📞 +91 72108 76636 / +91 93546 76636 · ✉️ Work
 ```
 index.html                  → the website (single page)
 css/style.css               → brand styles (navy / blue / cyan from the logo)
-js/main.js                  → all interactive features
+js/site.js                  → shared settings (WhatsApp number, form endpoint, GA4, Meta Pixel), analytics, navbar
+js/main.js                  → home page interactive features
+services/*.html             → one SEO page per service
+privacy.html, terms.html    → Privacy Policy and Terms of Use
 assets/                     → logo files (transparent PNG), favicon, founder photo
 404.html                    → custom "page not found" page
 robots.txt, sitemap.xml     → for Google Search Console
@@ -46,7 +49,7 @@ python automation_report.py              # demo report with sample data
 python automation_report.py leads.xlsx   # your own lead export
 ```
 
-## Site settings (top of `js/main.js`)
+## Site settings (top of `js/site.js`)
 | Setting | What to put | Where to get it |
 |---|---|---|
 | `FORM_ENDPOINT` | Google Apps Script web-app URL | Follow the steps at the top of `integrations/google-apps-script.gs` |
@@ -59,6 +62,7 @@ Each one is optional; leave it `''` to switch that feature off. When set, the si
 After going live: tick **Settings → Pages → Enforce HTTPS**, and submit `https://workflash.in/sitemap.xml` in Google Search Console.
 
 ## Editing
-- Phone / email / text: `index.html` (WhatsApp number is also at the top of `js/main.js`)
+- Phone / email / text: `index.html` (WhatsApp number is also at the top of `js/site.js`)
 - Colours: `:root` variables at the top of `css/style.css`
 - Journey levels, departments and quiz questions: the data arrays in `js/main.js`
+- Service pages, privacy and terms are generated from one template; edit the HTML files directly for small text changes
