@@ -11,7 +11,7 @@ window.WF = {
   // Flash 5.0 chat uses the same Apps Script URL. Only fill this if you deploy a separate script for chat.
   CHAT_ENDPOINT: '',
   // Google Analytics 4 Measurement ID, e.g. 'G-ABC123XYZ'. Leave empty to disable.
-  GA4_ID: '',
+  GA4_ID: 'G-NGHRRHJLE9',
   // Meta (Facebook/Instagram) Pixel ID, e.g. '123456789012345'. Leave empty to disable.
   META_PIXEL_ID: '',
 };
