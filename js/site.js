@@ -3,7 +3,7 @@
 // =========================================================
 window.WF = {
   // ---------- Site settings (fill these in, see README) ----------
-  WA_NUMBER: '917210876636',            // WhatsApp number with country code
+  WA_NUMBER: '919354676636',            // WhatsApp number with country code
   EMAIL: 'Workflashspace@gmail.com',
   // Google Apps Script web-app URL that saves every enquiry into a Google Sheet.
   // Leave empty to only use WhatsApp / email.  e.g. 'https://script.google.com/macros/s/XXXX/exec'

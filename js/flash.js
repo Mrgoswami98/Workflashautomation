@@ -6,7 +6,7 @@
 (() => {
   const WF = window.WF || {};
   const ENDPOINT = WF.CHAT_ENDPOINT || WF.FORM_ENDPOINT || '';
-  const WA = WF.WA_NUMBER || '917210876636';
+  const WA = WF.WA_NUMBER || '919354676636';
   const PATH = location.pathname;
   const IS_HOME = PATH === '/' || /\/index\.html$/.test(PATH);
   const QUOTE = IS_HOME ? '#quote' : '/#quote';
@@ -130,7 +130,7 @@
       hx: 'Hamare packages (one-time setup, GST alag):\n- **Basic**: ₹15,000 – ₹40,000 (WhatsApp replies, Sheets tracker, reminders)\n- **Medium**: ₹50,000 – ₹1,50,000 (CRM, delegation, attendance, inventory, dashboards)\n- **Advanced**: ₹1,50,000 – ₹5,00,000+ (AI agents, multi-department automation)\nApni pareshani bataiye, main bataunga kaunsa sahi rahega.',
       hi: 'हमारे पैकेज (एक बार का सेटअप, GST अलग):\n- **Basic**: ₹15,000 – ₹40,000 (WhatsApp जवाब, Sheets ट्रैकर, रिमाइंडर)\n- **Medium**: ₹50,000 – ₹1,50,000 (CRM, डेलिगेशन, अटेंडेंस, इन्वेंटरी, डैशबोर्ड)\n- **Advanced**: ₹1,50,000 – ₹5,00,000+ (AI एजेंट, कई विभागों का ऑटोमेशन)\nअपनी परेशानी बताइए, मैं बताऊँगा कौन-सा सही रहेगा।',
     },
-    human: { en: 'Sure. You can WhatsApp or call us on **+91 72108 76636** or **+91 93546 76636**, or email Workflashspace@gmail.com.', hx: 'Bilkul. WhatsApp ya call kariye **+91 72108 76636** / **+91 93546 76636** par, ya email: Workflashspace@gmail.com', hi: 'ज़रूर। WhatsApp या कॉल करें **+91 72108 76636** / **+91 93546 76636** पर, या ईमेल: Workflashspace@gmail.com' },
+    human: { en: 'Sure. Tap **WhatsApp us** below, call us on **+91 93546 76636**, or email Workflashspace@gmail.com.', hx: 'Bilkul. Neeche **WhatsApp us** dabaiye, **+91 93546 76636** par call kariye, ya email: Workflashspace@gmail.com', hi: 'ज़रूर। नीचे **WhatsApp us** दबाएँ, **+91 93546 76636** पर कॉल करें, या ईमेल: Workflashspace@gmail.com' },
     unknown: { en: "I want to understand this properly. Which of these is closest to your problem? Or describe it in a little more detail.", hx: 'Main ise sahi se samajhna chahta hoon. Inmein se kaunsi pareshani sabse kareeb hai? Ya thoda aur detail mein bataiye.', hi: 'मैं इसे ठीक से समझना चाहता हूँ। इनमें से कौन-सी परेशानी सबसे करीब है? या थोड़ा और विस्तार से बताइए।' },
     other: { en: "I understand English, Hindi and Hinglish best right now, so I'm replying in English. For help in your language, message our team on WhatsApp.", hx: '', hi: '' },
     thanks: { en: 'Happy to help! Anything else about your business I can help with?', hx: 'Khushi hui madad karke! Business mein aur koi pareshani?', hi: 'मदद करके खुशी हुई! बिज़नेस में और कोई परेशानी?' },
