@@ -8,7 +8,10 @@ Founder: Ankush Goswami · 📞 +91 72108 76636 / +91 93546 76636 · ✉️ Work
 index.html                  → the website (single page)
 css/style.css               → brand styles (navy / blue / cyan from the logo)
 js/main.js                  → all interactive features
-assets/                     → logo files (transparent PNG), favicon
+assets/                     → logo files (transparent PNG), favicon, founder photo
+404.html                    → custom "page not found" page
+robots.txt, sitemap.xml     → for Google Search Console
+integrations/google-apps-script.gs → saves form enquiries into a Google Sheet
 python/lead_intelligence.py → the script the "Live Python Lab" runs in the browser
 python/automation_report.py → Pandas/Excel lead report generator (Anaconda)
 python/environment.yml      → Anaconda environment definition
@@ -27,7 +30,7 @@ python/environment.yml      → Anaconda environment definition
 
 ## Deploy on GitHub Pages (free)
 1. Create a new **Public** repository at https://github.com/new (e.g. `workflash-website`).
-2. Click **"uploading an existing file"** and drag in **all files and folders from this zip** (not the zip itself). Then click **Commit changes**.
+2. Click **"uploading an existing file"** and drag in **all files and folders** of the website. Never upload a .zip of the site – it would be publicly downloadable. Then click **Commit changes**.
 3. Go to **Settings → Pages** → Source: **Deploy from a branch** → Branch: **main** / **(root)** → **Save**.
 4. After 1–2 minutes the site is live at `https://<username>.github.io/workflash-website/`.
 
@@ -42,6 +45,18 @@ conda activate workflash
 python automation_report.py              # demo report with sample data
 python automation_report.py leads.xlsx   # your own lead export
 ```
+
+## Site settings (top of `js/main.js`)
+| Setting | What to put | Where to get it |
+|---|---|---|
+| `FORM_ENDPOINT` | Google Apps Script web-app URL | Follow the steps at the top of `integrations/google-apps-script.gs` |
+| `GA4_ID` | `G-XXXXXXX` | Google Analytics → Admin → Data streams → Web |
+| `META_PIXEL_ID` | 15–16 digit number | Meta Events Manager → Data sources → Pixel |
+
+Each one is optional; leave it `''` to switch that feature off. When set, the site tracks
+`generate_lead` (form sent) and `contact` (WhatsApp / call / email clicks) events, and Meta gets `Lead` / `Contact`.
+
+After going live: tick **Settings → Pages → Enforce HTTPS**, and submit `https://workflash.in/sitemap.xml` in Google Search Console.
 
 ## Editing
 - Phone / email / text: `index.html` (WhatsApp number is also at the top of `js/main.js`)
