@@ -307,6 +307,13 @@
     } finally { clearTimeout(timer); }
   };
 
+  // save offline-mode chats to the Google Sheet (fire-and-forget)
+  const logOffline = (text, replies) => {
+    if (!ENDPOINT) return;
+    const bot = replies.map((m) => [m.text, m.card && ('[' + m.card.title + ']'), m.pkg && ('[' + m.pkg.name + ' ' + m.pkg.price + ']')].filter(Boolean).join(' ')).join(' | ');
+    try { fetch(ENDPOINT, { method: 'POST', mode: 'no-cors', keepalive: true, body: JSON.stringify({ action: 'log', sid: S.sid, page: location.href, user: text, bot }) }); } catch (e) {}
+  };
+
   let busy = false;
   const send = async (text) => {
     text = String(text || '').trim().slice(0, 1000);
@@ -331,7 +338,9 @@
     }
     await new Promise((res) => setTimeout(res, 450));
     typing(false);
+    const before = S.msgs.length;
     offlineReply(text);
+    logOffline(text, S.msgs.slice(before));
     busy = false;
   };
 

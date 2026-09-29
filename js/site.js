@@ -7,7 +7,7 @@ window.WF = {
   EMAIL: 'Workflashspace@gmail.com',
   // Google Apps Script web-app URL that saves every enquiry into a Google Sheet.
   // Leave empty to only use WhatsApp / email.  e.g. 'https://script.google.com/macros/s/XXXX/exec'
-  FORM_ENDPOINT: '',
+  FORM_ENDPOINT: 'https://script.google.com/macros/s/AKfycbz7hONANJgrZfHiyx0gPuIHuhvhOzV66KI9RNr1YGeE8CPpqKB4bnDuYPhmAXoazbM/exec',
   // Flash 5.0 chat uses the same Apps Script URL. Only fill this if you deploy a separate script for chat.
   CHAT_ENDPOINT: '',
   // Google Analytics 4 Measurement ID, e.g. 'G-ABC123XYZ'. Leave empty to disable.
