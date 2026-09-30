@@ -37,6 +37,18 @@ python/environment.yml      → Anaconda environment definition
 - ROI calculator in ₹ (yearly + 3-year savings)
 - **Automation Readiness Score**: a 6-question assessment with level, score gauge and recommendations
 - Quote form that sends the enquiry on WhatsApp or email (no server needed)
+- **Mega menu** under Services (services, live systems, industries, free checklist), on every page; keyboard and mobile friendly
+- **Industries**: colour tiles for Manufacturing, Trading, Real Estate, Education, Clinics, Retail/D2C and Services; clicking one fills the quote form
+- **Free SME Automation Checklist** (lead magnet): visitor leaves name + mobile, the lead is saved to the Sheet (Form = "Checklist download") and
+  `assets/sme-automation-checklist.pdf` downloads. Edit the PDF in `python/make_checklist_pdf.py` and run it to rebuild.
+- **Lead source tracking**: UTM tags, Google/Meta click IDs, landing page and first referrer are saved with every enquiry
+  (new columns in the Leads sheet: Form, Lead source, UTM source/medium/campaign/term/content, Click ID, Landing page, First source,
+  First referrer, Marketing opt-in). Tag your ads like `https://workflash.in/?utm_source=facebook&utm_medium=paid&utm_campaign=diwali`.
+- **Cookie banner** with Accept / Reject / Settings (Google Consent Mode v2). GA4 stores cookies and Meta Pixel loads only after consent.
+  "Cookie settings" link in every footer reopens it.
+- **Motion**: headlines slide in word by word, cards appear one after another, mouse spotlight on cards, 3D tilt on industry tiles,
+  hero drifts on scroll, delivery timeline fills as you scroll, project screenshots wipe in. All of it is switched off for visitors
+  who prefer reduced motion.
 
 ## Deploy on GitHub Pages (free)
 1. Create a new **Public** repository at https://github.com/new (e.g. `workflash-website`).
@@ -75,6 +87,11 @@ python automation_report.py leads.xlsx   # your own lead export
 | `FORM_ENDPOINT` | Google Apps Script web-app URL | Follow the steps at the top of `integrations/google-apps-script.gs` |
 | `GA4_ID` | `G-XXXXXXX` | Google Analytics → Admin → Data streams → Web |
 | `META_PIXEL_ID` | 15–16 digit number | Meta Events Manager → Data sources → Pixel |
+| `CHECKLIST_PDF` | path of the free PDF | Default `/assets/sme-automation-checklist.pdf` |
+
+**After updating `integrations/google-apps-script.gs`** (new lead-source columns): paste it into your Apps Script,
+then Deploy → Manage deployments → Edit → Version: **New version** → Deploy. The URL stays the same, and the new
+column titles are added to your existing Leads sheet automatically on the next enquiry.
 
 Each one is optional; leave it `''` to switch that feature off. When set, the site tracks
 `generate_lead` (form sent) and `contact` (WhatsApp / call / email clicks) events, and Meta gets `Lead` / `Contact`.
