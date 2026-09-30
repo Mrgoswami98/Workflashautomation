@@ -645,6 +645,8 @@ a.svc { display: block; color: inherit; }
 .fm-typing .fb { display: flex; gap: 4px; padding: 13px 14px; }
 .fm-typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); opacity: .4; animation: flashDot 1s infinite; }
 .fm-typing i:nth-child(2) { animation-delay: .15s; } .fm-typing i:nth-child(3) { animation-delay: .3s; }
+.fm-typing .fb { align-items: center; }
+.fm-slow { font-style: normal; font-size: 12.5px; color: var(--muted); margin-left: 6px; }
 @keyframes flashDot { 0%, 100% { opacity: .3; transform: none; } 50% { opacity: 1; transform: translateY(-3px); } }
 .flash-chips { display: flex; gap: 6px; padding: 0 14px; background: var(--bg-soft); overflow-x: auto; scrollbar-width: none; }
 .flash-chips:not(:empty) { padding: 4px 14px 10px; flex-wrap: wrap; max-height: 118px; overflow-y: auto; }
@@ -672,3 +674,36 @@ a.svc { display: block; color: inherit; }
   .flash-form textarea { font-size: 16px; }
 }
 @media (prefers-reduced-motion: reduce) { .flash-panel, .flash-tease { animation: none; } }
+
+/* ---------- 3D Automation Core (geometry from python/generate_3d_scene.py) ---------- */
+.core3d { position: relative; overflow: hidden; min-height: 700px; display: flex; align-items: center; padding: 100px 0;
+  background: radial-gradient(700px 520px at 72% 50%, rgba(11,92,255,.22), transparent 65%), radial-gradient(500px 400px at 72% 50%, rgba(27,200,245,.12), transparent 70%), var(--navy-950); }
+.core3d::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(140,170,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(140,170,255,.05) 1px, transparent 1px);
+  background-size: 48px 48px; mask-image: radial-gradient(ellipse 70% 70% at 70% 50%, #000 20%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse 70% 70% at 70% 50%, #000 20%, transparent 75%); }
+#coreCanvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: crosshair; touch-action: pan-y; opacity: 0; transition: opacity 1.2s ease; }
+.core3d.gl-ready #coreCanvas { opacity: 1; }
+.core-inner { position: relative; z-index: 1; pointer-events: none; }
+.core-copy { max-width: 470px; pointer-events: auto; }
+.core-copy > p { color: var(--d-muted); margin-top: 16px; font-size: 16.5px; }
+.core-stages { display: grid; gap: 8px; margin-top: 28px; }
+.core-stage { --p: 0; position: relative; display: flex; gap: 14px; align-items: flex-start; text-align: left; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--d-line); background: rgba(5,12,42,.55); backdrop-filter: blur(6px); color: var(--d-text); cursor: pointer; overflow: hidden; transition: border-color .3s, background .3s; }
+.core-stage::after { content: ""; position: absolute; left: 0; bottom: 0; height: 2px; width: calc(var(--p) * 100%); background: var(--grad); }
+.core-stage b { font-family: var(--f-mono); font-size: 12px; color: var(--d-muted); padding-top: 3px; }
+.core-stage strong { display: block; font-family: var(--f-head); font-size: 16px; color: #fff; font-weight: 600; }
+.core-stage small { display: block; font-size: 13.5px; color: var(--d-muted); line-height: 1.45; }
+.core-stage:hover { border-color: rgba(27,200,245,.4); }
+.core-stage.is-active { border-color: rgba(27,200,245,.55); background: rgba(11,92,255,.14); box-shadow: 0 0 0 1px rgba(27,200,245,.15), 0 10px 30px rgba(11,92,255,.2); }
+.core-stage.is-active b { color: var(--cyan); }
+.core-stage:focus-visible { outline: 3px solid rgba(27,200,245,.5); outline-offset: 2px; }
+.core-note { margin-top: 18px; font-size: 12.5px; color: rgba(27,200,245,.75); }
+.core-hud { position: absolute; top: 24px; right: 24px; z-index: 1; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; font-size: 11.5px; letter-spacing: .08em; color: rgba(201,211,240,.6); pointer-events: none; }
+.core-hud b { color: var(--cyan); font-weight: 500; }
+.core-hud .live { margin-right: 6px; }
+.core3d.no-gl #coreCanvas, .core3d.no-gl .core-hud { display: none; }
+@media (max-width: 899px) {
+  .core3d { display: block; min-height: 0; padding: 0 0 72px; background: radial-gradient(420px 320px at 50% 190px, rgba(11,92,255,.25), transparent 70%), var(--navy-950); }
+  #coreCanvas { position: relative; height: 380px; }
+  .core-hud { top: 16px; right: 16px; font-size: 10.5px; }
+  .core-copy { max-width: none; }
+}
