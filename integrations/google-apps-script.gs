@@ -39,7 +39,10 @@ const AI_TIME_BUDGET_MS = 18000; // stop trying fallback models after this, the 
 const PER_CHAT_HOURLY_LIMIT = 100; // the website asks ahead while the visitor types, so allow a bit more
 
 const LEAD_HEADERS = ['Received (IST)', 'Name', 'Mobile', 'Email', 'Company', 'Company size',
-  'Package', 'Timeline', 'Services', 'Message', 'Sent via', 'Page', 'Referrer', 'Device'];
+  'Package', 'Timeline', 'Services', 'Message', 'Sent via', 'Page', 'Referrer', 'Device',
+  // added for lead-source tracking (new columns are added to an existing sheet automatically)
+  'Form', 'Lead source', 'UTM source', 'UTM medium', 'UTM campaign', 'UTM term', 'UTM content',
+  'Click ID', 'Landing page', 'First source', 'First referrer', 'Marketing opt-in'];
 const CHAT_HEADERS = ['Time (IST)', 'Chat ID', 'Page', 'Visitor message', 'Flash 5.0 reply', 'Phone shared?', 'Provider'];
 
 // ---------------------------------------------------------------
@@ -127,11 +130,14 @@ function saveLead_(e) {
       now_(), clean_(p.name), clean_(p.phone), clean_(p.email), clean_(p.company), clean_(p.size),
       clean_(p.package), clean_(p.timeline), clean_(p.services), clean_(p.message), clean_(p.via),
       clean_(p.page), clean_(p.referrer), clean_(p.userAgent),
+      clean_(p.form || 'Quote'), clean_(p.source), clean_(p.utm_source), clean_(p.utm_medium), clean_(p.utm_campaign),
+      clean_(p.utm_term), clean_(p.utm_content), clean_(p.click_id), clean_(p.landing), clean_(p.first_source),
+      clean_(p.first_referrer), clean_(p.optin === 'yes' ? 'YES' : ''),
     ];
     sh.appendRow(row);
     const notify = prop_('NOTIFY_EMAIL');
     if (notify) {
-      MailApp.sendEmail(notify, 'New website enquiry – ' + row[1],
+      MailApp.sendEmail(notify, (p.form === 'Checklist download' ? 'Checklist download – ' : 'New website enquiry – ') + row[1],
         LEAD_HEADERS.map((h, i) => h + ': ' + row[i]).join('\n'));
     }
     return json_({ ok: true });
@@ -301,6 +307,10 @@ function sheet_(name, headers) {
     sh.appendRow(headers);
     sh.getRange(1, 1, 1, headers.length).setFontWeight('bold');
     sh.setFrozenRows(1);
+  } else if (sh.getLastColumn() < headers.length) {
+    // older sheet: add the missing column titles on the right, existing data stays as it is
+    const n = sh.getLastColumn();
+    sh.getRange(1, n + 1, 1, headers.length - n).setValues([headers.slice(n)]).setFontWeight('bold');
   }
   return sh;
 }
