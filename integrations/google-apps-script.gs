@@ -17,7 +17,7 @@
  *          - Claude key (paid):            https://console.anthropic.com
  *      Optional properties:
  *        AI_MODEL     = model id (defaults below; check the provider's model list if one is retired)
- *        DAILY_LIMIT  = max AI replies per day (default 400) – protects your bill
+ *        DAILY_LIMIT  = max AI replies per day (default 1200) – protects your bill
  *        NOTIFY_EMAIL = email address to get every new enquiry
  *    Without AI_API_KEY, Flash 5.0 still works in its built-in offline mode
  *    (English, Hindi, Hinglish).
@@ -34,9 +34,9 @@
 // "thinks" at level medium by default before answering. For a sales chat we use a fast
 // model with minimal thinking (replies in ~2-4 sec). See thinkingFor_() below.
 const DEFAULT_MODELS = { gemini: 'gemini-3.6-flash', claude: 'claude-haiku-4-5-20251001' };
-const MAX_OUTPUT_TOKENS = 700;
+const MAX_OUTPUT_TOKENS = 450; // replies are kept under ~120 words; a lower cap = faster answers
 const AI_TIME_BUDGET_MS = 18000; // stop trying fallback models after this, the website falls back to offline mode
-const PER_CHAT_HOURLY_LIMIT = 40;
+const PER_CHAT_HOURLY_LIMIT = 100; // the website asks ahead while the visitor types, so allow a bit more
 
 const LEAD_HEADERS = ['Received (IST)', 'Name', 'Mobile', 'Email', 'Company', 'Company size',
   'Package', 'Timeline', 'Services', 'Message', 'Sent via', 'Page', 'Referrer', 'Device'];
@@ -159,7 +159,7 @@ function handleChat_(body) {
   // daily limit (protects the AI bill)
   const props = PropertiesService.getScriptProperties();
   const today = Utilities.formatDate(new Date(), 'Asia/Kolkata', 'yyyy-MM-dd');
-  const limit = Number(prop_('DAILY_LIMIT') || 400);
+  const limit = Number(prop_('DAILY_LIMIT') || 1200);
   // (no script lock here: waiting for a lock slowed every reply; the count may be off by one or two, which is fine)
   const all = props.getProperties();
   const count = all.DAY === today ? Number(all.DAY_COUNT || 0) : 0;
@@ -224,6 +224,7 @@ function cleanMessages_(list) {
 // if a model is busy (503), rate-limited (429) or retired (404), move straight to the next one.
 // SPEED: no sleeps and no second try on the same model (that used to add 5-15 sec),
 // and we give up after AI_TIME_BUDGET_MS so the website can answer from offline mode.
+// measured from Apps Script (Sep 2026): gemini-3.6-flash ~1.8-2.1 s, gemini-3.5-flash-lite ~3.6 s
 const GEMINI_FALLBACKS = ['gemini-3.6-flash', 'gemini-3.5-flash-lite', 'gemini-3.8-flash'];
 function callGeminiWithFallback_(key, model, messages) {
   const started = Date.now();
