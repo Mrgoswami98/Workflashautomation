@@ -30,8 +30,12 @@
  *    Version: New version → Deploy (the URL stays the same).
  */
 
-const DEFAULT_MODELS = { gemini: 'gemini-3.8-flash', claude: 'claude-haiku-4-5-20251001' };
+// SPEED: Flash 5.0 used to take 20-25 seconds per reply because gemini-3.8-flash
+// "thinks" at level medium by default before answering. For a sales chat we use a fast
+// model with minimal thinking (replies in ~2-4 sec). See thinkingFor_() below.
+const DEFAULT_MODELS = { gemini: 'gemini-3.6-flash', claude: 'claude-haiku-4-5-20251001' };
 const MAX_OUTPUT_TOKENS = 700;
+const AI_TIME_BUDGET_MS = 18000; // stop trying fallback models after this, the website falls back to offline mode
 const PER_CHAT_HOURLY_LIMIT = 40;
 
 const LEAD_HEADERS = ['Received (IST)', 'Name', 'Mobile', 'Email', 'Company', 'Company size',
@@ -105,6 +109,7 @@ function doPost(e) {
   return saveLead_(e);
 }
 
+// the website "pings" this when a visitor is about to chat, so the script is warm (no cold start)
 function doGet() {
   return ContentService.createTextOutput('Workflash website backend is running.');
 }
@@ -155,15 +160,11 @@ function handleChat_(body) {
   const props = PropertiesService.getScriptProperties();
   const today = Utilities.formatDate(new Date(), 'Asia/Kolkata', 'yyyy-MM-dd');
   const limit = Number(prop_('DAILY_LIMIT') || 400);
-  const lock = LockService.getScriptLock();
-  lock.waitLock(5000);
-  try {
-    const count = props.getProperty('DAY') === today ? Number(props.getProperty('DAY_COUNT') || 0) : 0;
-    if (count >= limit) return { ok: false, reason: 'daily_limit' };
-    props.setProperties({ DAY: today, DAY_COUNT: String(count + 1) });
-  } finally {
-    lock.releaseLock();
-  }
+  // (no script lock here: waiting for a lock slowed every reply; the count may be off by one or two, which is fine)
+  const all = props.getProperties();
+  const count = all.DAY === today ? Number(all.DAY_COUNT || 0) : 0;
+  if (count >= limit) return { ok: false, reason: 'daily_limit' };
+  props.setProperties({ DAY: today, DAY_COUNT: String(count + 1) });
 
   const messages = cleanMessages_(body.messages);
   if (!messages.length) return { ok: false, reason: 'empty' };
@@ -182,18 +183,13 @@ function handleChat_(body) {
   reply = String(reply || '').trim().slice(0, 4000);
   if (!reply) return { ok: false, reason: 'ai_error' };
 
-  try {
-    const last = messages[messages.length - 1].content;
-    sheet_('Chats', CHAT_HEADERS).appendRow([
-      now_(), sid, clean_(body.page), clean_(last), clean_(reply),
-      /(?:\+?91[\s-]?)?[6-9]\d{9}/.test(last.replace(/\s/g, '')) ? 'YES' : '', provider,
-    ]);
-  } catch (err) { console.error(err); }
-
-  return { ok: true, reply: reply };
+  // SPEED: the reply goes back right away. The website then sends a separate
+  // background "log" call that saves this chat into the Chats sheet, so the
+  // visitor never waits for the Google Sheet write.
+  return { ok: true, reply: reply, provider: provider };
 }
 
-// offline-mode chats (no AI key yet) are sent here just to be saved
+// chats are sent here in the background just to be saved (offline-mode and AI replies)
 function handleLog_(body) {
   const sid = String(body.sid || 'anon').replace(/[^\w-]/g, '').slice(0, 64) || 'anon';
   const cache = CacheService.getScriptCache();
@@ -202,9 +198,10 @@ function handleLog_(body) {
   cache.put('lg_' + sid, String(used + 1), 3600);
   const user = String(body.user || '').slice(0, 1500);
   if (!user) return { ok: false, reason: 'empty' };
+  const mode = body.mode === 'ai' ? (prop_('AI_PROVIDER') || 'gemini').toLowerCase() : 'offline';
   sheet_('Chats', CHAT_HEADERS).appendRow([
     now_(), sid, clean_(body.page), clean_(user), clean_(String(body.bot || '').slice(0, 3000)),
-    /(?:\+?91[\s-]?)?[6-9]\d{9}/.test(user.replace(/\s/g, '')) ? 'YES' : '', 'offline',
+    /(?:\+?91[\s-]?)?[6-9]\d{9}/.test(user.replace(/\s/g, '')) ? 'YES' : '', mode,
   ]);
   return { ok: true };
 }
@@ -224,27 +221,39 @@ function cleanMessages_(list) {
   return out;
 }
 
-// if a model is busy (503), rate-limited (429) or retired (404), try the next one
-const GEMINI_FALLBACKS = ['gemini-3.8-flash', 'gemini-3.7-flash', 'gemini-3.5-flash-lite'];
+// if a model is busy (503), rate-limited (429) or retired (404), move straight to the next one.
+// SPEED: no sleeps and no second try on the same model (that used to add 5-15 sec),
+// and we give up after AI_TIME_BUDGET_MS so the website can answer from offline mode.
+const GEMINI_FALLBACKS = ['gemini-3.6-flash', 'gemini-3.5-flash-lite', 'gemini-3.8-flash'];
 function callGeminiWithFallback_(key, model, messages) {
+  const started = Date.now();
   const models = [model].concat(GEMINI_FALLBACKS.filter(function (m) { return m !== model; }));
   const errors = [];
   for (let i = 0; i < models.length; i++) {
-    for (let attempt = 0; attempt < 2; attempt++) {
-      try { return callGemini_(key, models[i], messages); }
-      catch (err) {
-        const msg = String(err);
-        errors.push(models[i] + ' -> ' + msg.slice(0, 160));
-        if (!/Gemini (404|429|500|503)/.test(msg)) throw new Error(errors.join('\n'));
-        if (/Gemini (404|429)/.test(msg)) break; // no point retrying this model
-        Utilities.sleep(1200);
+    if (i > 0 && Date.now() - started > AI_TIME_BUDGET_MS) break;
+    try { return callGemini_(key, models[i], messages); }
+    catch (err) {
+      let msg = String(err);
+      if (/Gemini 400/.test(msg) && /think/i.test(msg)) { // model doesn't accept this thinking level
+        try { return callGemini_(key, models[i], messages, true); } catch (err2) { msg = String(err2); }
       }
+      errors.push(models[i] + ' -> ' + msg.slice(0, 160));
+      if (!/Gemini (404|429|500|503)/.test(msg)) throw new Error(errors.join('\n'));
     }
   }
   throw new Error(errors.join('\n'));
 }
 
-function callGemini_(key, model, messages) {
+// SPEED: lowest thinking level each model supports. Thinking makes replies slow and
+// also eats into MAX_OUTPUT_TOKENS. Unknown models get no thinkingConfig (provider default).
+function thinkingFor_(model) {
+  const m = String(model).toLowerCase();
+  if (/gemini-3\.(5|6)|flash-lite/.test(m)) return { thinkingLevel: 'minimal' };
+  if (/gemini-(2\.5|3)/.test(m)) return { thinkingLevel: 'low' };
+  return null;
+}
+
+function callGemini_(key, model, messages, noThinking) {
   const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(model) + ':generateContent';
   const res = UrlFetchApp.fetch(url, {
     method: 'post',
@@ -254,7 +263,12 @@ function callGemini_(key, model, messages) {
     payload: JSON.stringify({
       systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
       contents: messages.map(function (m) { return { role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] }; }),
-      generationConfig: { maxOutputTokens: MAX_OUTPUT_TOKENS, temperature: 0.5 },
+      generationConfig: (function () {
+        const g = { maxOutputTokens: MAX_OUTPUT_TOKENS, temperature: 0.5 };
+        const t = noThinking ? null : thinkingFor_(model);
+        if (t) g.thinkingConfig = t;
+        return g;
+      })(),
     }),
   });
   if (res.getResponseCode() !== 200) throw new Error('Gemini ' + res.getResponseCode() + ': ' + res.getContentText().slice(0, 300));
