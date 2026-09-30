@@ -221,7 +221,7 @@
     if (on && !t) {
       log.insertAdjacentHTML('beforeend', `<div class="fm fm-bot fm-typing"><span class="fm-av">${BOLT}</span><div class="fb"><i></i><i></i><i></i><em class="fm-slow" hidden></em></div></div>`);
       log.scrollTop = log.scrollHeight;
-      slowTimer = setTimeout(() => { const e = log.querySelector('.fm-slow'); if (e) { e.textContent = SLOW[L()]; e.hidden = false; log.scrollTop = log.scrollHeight; } }, 3500);
+      slowTimer = setTimeout(() => { const e = log.querySelector('.fm-slow'); if (e) { e.textContent = SLOW[L()]; e.hidden = false; log.scrollTop = log.scrollHeight; } }, 2200);
     }
     if (!on && t) t.remove();
   };
@@ -298,11 +298,16 @@
   };
 
   // ---------- AI brain (via Apps Script) ----------
-  const aiReply = async () => {
-    const history = S.msgs.filter((m) => m.text || m.card).slice(-MAX_HISTORY).map((m) => ({
+  // conversation so far (+ the message being typed, when we ask ahead of time)
+  const buildHistory = (pending) => {
+    const list = S.msgs.filter((m) => m.text || m.card).map((m) => ({
       role: m.role,
       content: (m.text || '') + (m.card ? `\n[Suggested: ${m.card.title}]` : '') + (m.pkg ? `\n[Package: ${m.pkg.name} ${m.pkg.price}]` : ''),
     }));
+    if (pending) list.push({ role: 'user', content: pending });
+    return list.slice(-MAX_HISTORY);
+  };
+  const aiReply = async (history = buildHistory()) => {
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), AI_TIMEOUT_MS);
     try {
@@ -333,19 +338,63 @@
     try { fetch(ENDPOINT, { method: 'GET', mode: 'no-cors', cache: 'no-store' }).catch(() => {}); } catch (e) {}
   };
 
+  // ---------- speed: answer while the visitor is still typing ----------
+  // When the visitor stops typing for a moment, the question is sent to the AI in the background.
+  // If they then press Send without changing it, the answer is usually already here, so it appears
+  // at once. At most 2 early requests per message, so the AI bill stays small.
+  const norm = (t) => String(t || '').trim().replace(/[ \t]+/g, ' ').slice(0, 1000);
+  const specKey = (t) => S.msgs.length + '|' + norm(t).toLowerCase();
+  const SPEC_MAX = 2;
+  let spec = null, specCount = 0, specTimer = 0;
+  const prefetch = (t) => {
+    t = norm(t);
+    if (!ENDPOINT || S.aiOff || busy || t.length < 6 || specCount >= SPEC_MAX || isInstant(t)) return;
+    const key = specKey(t);
+    if (spec && spec.key === key) return;
+    specCount++;
+    spec = { key, at: Date.now(), promise: aiReply(buildHistory(t)) };
+  };
+
+  // messages the built-in knowledge answers instantly and correctly (no AI round-trip)
+  const RE_CONTACT = /\b(contact|phone|mobile|whats ?app) ?(no|number|details?)\b|\bnumber (do|dijiye|dena|bhejo|kya hai|share)|\baddress\b|\boffice\b|\blocation\b|kaha(n)? (ho|hai|hain|par|pe)\b|\binsta(gram)?\b|\bbaat kar|talk to (a )?(human|person|someone)|call (karo|kare|kariye|karein|me|you|us)\b|पता|संपर्क|नंबर|ऑफिस/i;
+  const isInstant = (t) => {
+    if (!t || t.length > 60 || pickTopic(t)) return false;
+    const words = t.split(/\s+/).length;
+    if (RE_CONTACT.test(t) || RE_THANKS.test(t) && words <= 6) return true;
+    if (RE_PRICE.test(t) && words <= 7) return true;
+    return RE_GREET.test(t) && words <= 4;
+  };
+
   let busy = false;
   const send = async (text) => {
-    text = String(text || '').trim().slice(0, 1000);
+    text = norm(text);
     if (!text || busy) return;
+    clearTimeout(specTimer);
+    const keyBefore = specKey(text);
     const lang = detectLang(text);
     // switch back to English only on a real sentence, so 'ok' / 'yes' don't flip the language
     if (lang !== 'en' || !S.lang || text.length > 14) S.lang = lang;
     S.msgs.push({ role: 'user', text });
     save(); render();
     input.value = ''; input.style.height = '';
-    busy = true; typing(true);
+    busy = true;
+    // simple questions (hi, price list, contact, thanks) are answered instantly from the built-in knowledge
+    if (isInstant(text)) {
+      spec = null; specCount = 0;
+      typing(true);
+      await new Promise((res) => setTimeout(res, 120));
+      typing(false);
+      const before = S.msgs.length;
+      offlineReply(text);
+      logOffline(text, S.msgs.slice(before));
+      busy = false; return;
+    }
+    typing(true);
     if (!S.aiOff) {
-      const r = await aiReply();
+      // SPEED: if we already asked the AI while the visitor was typing this exact message, use that answer
+      const ahead = spec && spec.key === keyBefore && Date.now() - spec.at < 60000 ? spec.promise : null;
+      spec = null; specCount = 0;
+      const r = await (ahead || aiReply());
       typing(false);
       if (r.ok) {
         const t = pickTopic(text); if (t) { S.topic = t; S.problem = text; } else if (!S.problem && text.length > 15) S.problem = text;
@@ -356,7 +405,6 @@
       if (r.reason === 'ai_not_configured') { S.aiOff = true; save(); }
       else if (r.reason === 'rate_limited' || r.reason === 'daily_limit') { say({ text: T.human[L()] }); busy = false; return; }
     }
-    await new Promise((res) => setTimeout(res, 450));
     typing(false);
     const before = S.msgs.length;
     offlineReply(text);
@@ -382,6 +430,8 @@
   launch.addEventListener('click', () => setOpen(panel.hidden));
   ['pointerenter', 'focus', 'touchstart'].forEach((ev) => launch.addEventListener(ev, warm, { passive: true }));
   input.addEventListener('focus', warm);
+  input.addEventListener('input', () => { warm(); clearTimeout(specTimer); specTimer = setTimeout(() => prefetch(input.value), 650); });
+  chips.addEventListener('pointerover', (e) => { const b = e.target.closest('button'); if (b && e.pointerType === 'mouse') prefetch(b.textContent); });
   addEventListener('load', () => setTimeout(warm, 2500));
   $('.flash-close').addEventListener('click', () => setOpen(false));
   $('.flash-reset').addEventListener('click', () => {
