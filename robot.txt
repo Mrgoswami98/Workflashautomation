@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /python/
+Disallow: /integrations/
+
+Sitemap: https://workflash.in/sitemap.xml
