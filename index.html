@@ -207,6 +207,30 @@
   <p class="container note">*Indicative outcomes. Actual results depend on your processes and scope.</p>
 </section>
 
+<!-- ============ 3D AUTOMATION CORE (geometry generated in Python) ============ -->
+<section class="core3d dark" id="core3d" data-src="assets/core3d.bin" aria-labelledby="coreTitle">
+  <canvas id="coreCanvas" aria-hidden="true"></canvas>
+  <div class="core-hud mono" aria-hidden="true">
+    <span><i class="live"></i>WF-CORE · LIVE RENDER</span>
+    <span data-hud="shape">01 / 04 · SPARK</span>
+    <span><b data-hud="count">8,500</b> particles · <b data-hud="fps">60 fps</b></span>
+  </div>
+  <div class="container core-inner">
+    <div class="core-copy reveal">
+      <span class="eyebrow">Automation Core · 3D</span>
+      <h2 id="coreTitle">Watch one idea become a <span class="grad-text">self-running business</span>.</h2>
+      <p>Every point in this 3D scene was calculated by our Python engine (NumPy) and is rendered live in your browser. Move your mouse to tilt it. Tap it to send a shockwave.</p>
+      <div class="core-stages" role="tablist" aria-label="Automation stages">
+        <button type="button" class="core-stage is-active" role="tab" aria-selected="true"><b>01</b><span><strong>Spark</strong><small>Your idea and the first automated workflow</small></span></button>
+        <button type="button" class="core-stage" role="tab" aria-selected="false"><b>02</b><span><strong>Automate</strong><small>CRM, tasks, attendance and reports run themselves</small></span></button>
+        <button type="button" class="core-stage" role="tab" aria-selected="false"><b>03</b><span><strong>AI Core</strong><small>AI agents that understand, decide and reply</small></span></button>
+        <button type="button" class="core-stage" role="tab" aria-selected="false"><b>04</b><span><strong>Scale</strong><small>Every team, branch and city connected</small></span></button>
+      </div>
+      <p class="core-note mono">$ python generate_3d_scene.py → 4 shapes × 7,000 points → WebGL</p>
+    </div>
+  </div>
+</section>
+
 <!-- ============ SERVICES ============ -->
 <section class="section" id="services">
   <div class="container">
@@ -728,6 +752,7 @@ result  # returned to the page to draw the chart
 
 <script src="js/site.js"></script>
 <script src="js/main.js"></script>
+<script src="js/core3d.js" defer></script>
 <script src="js/flash.js" defer></script>
 </body>
 </html>
