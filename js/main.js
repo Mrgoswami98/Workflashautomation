@@ -11,6 +11,17 @@
   const track = window.WF.track;
   const FOUNDED = 2021;
 
+  // Save a lead into the Google Sheet (fire-and-forget, never blocks WhatsApp / download).
+  // Every lead carries its source: UTM tags, Google/Meta click ID and landing page (see js/site.js).
+  const saveLead = (fields) => {
+    if (!FORM_ENDPOINT) return;
+    const attrib = window.WF.attribution ? window.WF.attribution() : {};
+    const payload = new URLSearchParams(Object.assign({
+      page: location.href, referrer: document.referrer || '', userAgent: navigator.userAgent,
+    }, attrib, fields));
+    try { fetch(FORM_ENDPOINT, { method: 'POST', mode: 'no-cors', keepalive: true, body: payload }); } catch (err) {}
+  };
+
   // ---------- Basics ----------
   $('#yearsExp').textContent = Math.max(1, new Date().getFullYear() - FOUNDED) + '+';
 
@@ -28,7 +39,7 @@
   toTop.addEventListener('click', () => scrollTo({ top: 0 }));
 
   // Active nav link
-  const links = $$('#navLinks a:not(.btn)');
+  const links = $$('#navLinks a:not(.btn)').filter((l) => /^#[\w-]+$/.test(l.getAttribute('href') || ''));
   const spy = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
       if (!e.isIntersecting) return;
@@ -417,7 +428,7 @@
     extra = text || '';
     if (!extra) return;
     // replace an earlier auto-filled line of the same kind instead of stacking duplicates
-    const kind = (extra.match(/^(ROI estimate|Automation readiness score|Interested in Level|Interested in: )/) || [])[1];
+    const kind = (extra.match(/^(ROI estimate|Automation readiness score|Interested in Level|Interested in: |Industry: )/) || [])[1];
     const lines = form.message.value.split('\n').filter((l) => l.trim() && !(kind && l.startsWith(kind)));
     form.message.value = [extra, ...lines].join('\n');
   };
@@ -487,14 +498,11 @@
       d.message && `\n${d.message}`,
     ].filter(Boolean).join('\n');
     // 1) save a copy of the enquiry in Google Sheets (fire-and-forget, never blocks WhatsApp)
-    if (FORM_ENDPOINT) {
-      const payload = new URLSearchParams({
-        name: d.name, phone: d.phone, email: d.email || '', company: d.company || '',
-        size: d.size, package: d.package, timeline: d.timeline, services: svcs.join(', '), message: d.message || '',
-        via, page: location.href, referrer: document.referrer || '', userAgent: navigator.userAgent,
-      });
-      try { fetch(FORM_ENDPOINT, { method: 'POST', mode: 'no-cors', keepalive: true, body: payload }); } catch (err) {}
-    }
+    saveLead({
+      form: 'Quote', name: d.name, phone: d.phone, email: d.email || '', company: d.company || '',
+      size: d.size, package: d.package, timeline: d.timeline, services: svcs.join(', '), message: d.message || '',
+      via, optin: d.optin ? 'yes' : '',
+    });
     track('generate_lead', { method: via, company_size: d.size });
     // 2) open WhatsApp / email with the message ready to send
     if (via === 'email') {
@@ -505,4 +513,138 @@
     note.className = 'form-note';
     note.textContent = 'Thank you! Your request is ready to send. We reply within 24 hours.';
   });
+
+  // ---------- Industries: "Plan for my industry" fills the quote form ----------
+  $$('[data-industry]').forEach((b) => b.addEventListener('click', () => {
+    prefill(`Industry: ${b.dataset.industry}.`);
+    track('industry_click', { industry: b.dataset.industry });
+  }));
+
+  // ---------- Free checklist (lead magnet): name + mobile → Google Sheet → PDF download ----------
+  const ck = $('#ckDialog');
+  if (ck) {
+    const ckForm = $('#ckForm', ck), ckNote = $('#ckNote', ck);
+    const PDF = window.WF.CHECKLIST_PDF || '/assets/sme-automation-checklist.pdf';
+    const download = () => {
+      const a = document.createElement('a');
+      a.href = PDF; a.download = 'Workflash-SME-Automation-Checklist.pdf';
+      document.body.appendChild(a); a.click(); a.remove();
+    };
+    const done = (() => { try { return sessionStorage.getItem('wf_ck_done') === '1'; } catch (e) { return false; } });
+    const openCk = () => {
+      ck.classList.toggle('done', done());
+      ckNote.textContent = ''; ckNote.className = 'form-note';
+      if (typeof ck.showModal === 'function') ck.showModal(); else ck.setAttribute('open', '');
+      track('checklist_open');
+      if (!done()) setTimeout(() => ckForm.name.focus(), 60);
+    };
+    const closeCk = () => { if (ck.close) ck.close(); else ck.removeAttribute('open'); };
+    $$('[data-checklist]').forEach((b) => b.addEventListener('click', (e) => { e.preventDefault(); openCk(); }));
+    ck.addEventListener('click', (e) => { if (e.target === ck || e.target.closest('.ck-close')) closeCk(); });
+    $('#ckAgain', ck).addEventListener('click', download);
+    ckForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const d = Object.fromEntries(new FormData(ckForm));
+      const digits = (d.phone || '').replace(/\D/g, '').slice(-10);
+      const okName = (d.name || '').trim().length > 1, okPhone = /^[6-9]\d{9}$/.test(digits);
+      ckForm.name.classList.toggle('invalid', !okName);
+      ckForm.phone.classList.toggle('invalid', !okPhone);
+      if (!okName || !okPhone) {
+        ckNote.className = 'form-note err';
+        ckNote.textContent = 'Please enter your name and a valid 10-digit mobile number.';
+        return;
+      }
+      if (d.website) return; // spam bot
+      saveLead({
+        form: 'Checklist download', name: d.name, phone: d.phone, email: d.email || '', company: d.company || '',
+        size: '', package: '', timeline: '', services: 'SME Automation Checklist (PDF)',
+        message: 'Downloaded the free SME Automation Checklist', via: 'checklist', optin: d.optin ? 'yes' : '',
+      });
+      track('generate_lead', { method: 'checklist' });
+      try { sessionStorage.setItem('wf_ck_done', '1'); } catch (err) {}
+      download();
+      ck.classList.add('done');
+    });
+  }
+
+  // ---------- Motion (inspired by wipro.com) ----------
+  // Headlines slide up word by word, cards appear one after another, a soft spotlight follows
+  // the mouse, the hero drifts on scroll and the delivery timeline fills as you scroll.
+  if (!reduceMotion) {
+    // 1) headline word reveal
+    const split = (h) => {
+      if (!h || h.dataset.split) return;
+      h.dataset.split = '1';
+      h.setAttribute('aria-label', h.textContent.replace(/\s+/g, ' ').trim());
+      let i = 0;
+      const unit = (node) => {
+        const w = document.createElement('span'); w.className = 'w'; w.setAttribute('aria-hidden', 'true');
+        const inner = document.createElement('span'); inner.style.setProperty('--i', i++);
+        inner.appendChild(node); w.appendChild(inner); return w;
+      };
+      [...h.childNodes].forEach((n) => {
+        if (n.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach((part) => {
+            if (!part) return;
+            frag.appendChild(/^\s+$/.test(part) ? document.createTextNode(' ') : unit(document.createTextNode(part)));
+          });
+          n.replaceWith(frag);
+        } else if (n.nodeType === 1 && n.tagName !== 'BR') {
+          n.replaceWith(unit(n.cloneNode(true)));
+        }
+      });
+      h.classList.add('split');
+    };
+    $$('.reveal h2, .head h2').forEach(split);
+    const h1 = $('.hero h1');
+    split(h1);
+    setTimeout(() => h1 && h1.classList.add('in'), 150);
+
+    // 2) stagger cards inside grids
+    ['.svc-grid', '.tiers', '.projects', '.timeline', '.strip-grid', '.bento'].forEach((sel) => $$(sel).forEach((g) => {
+      $$(':scope > .reveal', g).forEach((el, k) => {
+        el.style.transitionDelay = Math.min(k, 7) * 90 + 'ms';
+        el.addEventListener('transitionend', () => { el.style.transitionDelay = ''; }, { once: true });
+      });
+    }));
+
+    // 3) spotlight that follows the mouse + gentle 3D tilt on industry tiles
+    if (canHover) {
+      $$('.svc, .tier, .project, .ind').forEach((el) => el.addEventListener('pointermove', (e) => {
+        const r = el.getBoundingClientRect();
+        const x = e.clientX - r.left, y = e.clientY - r.top;
+        el.style.setProperty('--mx', x + 'px'); el.style.setProperty('--my', y + 'px');
+        if (el.classList.contains('ind')) {
+          el.style.setProperty('--ry', ((x / r.width) - .5) * 6 + 'deg');
+          el.style.setProperty('--rx', (.5 - (y / r.height)) * 6 + 'deg');
+        }
+      }));
+      $$('.ind').forEach((el) => el.addEventListener('pointerleave', () => { el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); }));
+    }
+
+    // 4) hero drift + 5) timeline fill, in one scroll handler
+    const heroCopy = $('.hero-copy'), heroVis = $('.hero-visual'), tl = $('.timeline');
+    const steps = tl ? $$('li', tl) : [];
+    let ticking = false;
+    const onMotionScroll = () => {
+      ticking = false;
+      const y = scrollY;
+      if (innerWidth > 900 && y < innerHeight * 1.2) {
+        heroCopy.style.translate = `0 ${y * 0.16}px`;
+        heroCopy.style.opacity = Math.max(0, 1 - y / (innerHeight * 0.95)).toFixed(3);
+        heroVis.style.translate = `0 ${y * 0.07}px`;
+      } else if (innerWidth <= 900) {
+        heroCopy.style.translate = heroVis.style.translate = heroCopy.style.opacity = '';
+      }
+      if (tl) {
+        const r = tl.getBoundingClientRect();
+        const p = Math.min(1, Math.max(0, (innerHeight * 0.85 - r.top) / (innerHeight * 0.55)));
+        tl.style.setProperty('--tl', p.toFixed(3));
+        steps.forEach((li, k) => li.classList.toggle('done', p >= (k + 0.6) / steps.length));
+      }
+    };
+    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onMotionScroll); } }, { passive: true });
+    onMotionScroll();
+  }
 })();
