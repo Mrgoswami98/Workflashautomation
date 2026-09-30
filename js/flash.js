@@ -11,6 +11,7 @@
   const IS_HOME = PATH === '/' || /\/index\.html$/.test(PATH);
   const QUOTE = IS_HOME ? '#quote' : '/#quote';
   const MAX_HISTORY = 12;
+  const AI_TIMEOUT_MS = 20000; // after this the offline brain answers, so nobody waits forever
 
   // ---------- storage (per browser tab session) ----------
   const KEY = 'flash5';
@@ -212,9 +213,16 @@
     updateLinks();
     log.scrollTop = log.scrollHeight;
   };
+  let slowTimer = 0;
+  const SLOW = { en: 'Flash is thinking…', hx: 'Flash soch raha hai…', hi: 'Flash सोच रहा है…' };
   const typing = (on) => {
     const t = log.querySelector('.fm-typing');
-    if (on && !t) { log.insertAdjacentHTML('beforeend', `<div class="fm fm-bot fm-typing"><span class="fm-av">${BOLT}</span><div class="fb"><i></i><i></i><i></i></div></div>`); log.scrollTop = log.scrollHeight; }
+    clearTimeout(slowTimer);
+    if (on && !t) {
+      log.insertAdjacentHTML('beforeend', `<div class="fm fm-bot fm-typing"><span class="fm-av">${BOLT}</span><div class="fb"><i></i><i></i><i></i><em class="fm-slow" hidden></em></div></div>`);
+      log.scrollTop = log.scrollHeight;
+      slowTimer = setTimeout(() => { const e = log.querySelector('.fm-slow'); if (e) { e.textContent = SLOW[L()]; e.hidden = false; log.scrollTop = log.scrollHeight; } }, 3500);
+    }
     if (!on && t) t.remove();
   };
   const say = (m) => { S.msgs.push({ role: 'assistant', ...m }); save(); render(); };
@@ -296,22 +304,33 @@
       content: (m.text || '') + (m.card ? `\n[Suggested: ${m.card.title}]` : '') + (m.pkg ? `\n[Package: ${m.pkg.name} ${m.pkg.price}]` : ''),
     }));
     const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 45000);
+    const timer = setTimeout(() => ctrl.abort(), AI_TIMEOUT_MS);
     try {
       const res = await fetch(ENDPOINT, { method: 'POST', body: JSON.stringify({ action: 'chat', sid: S.sid, page: location.href, messages: history }), signal: ctrl.signal });
+      lastWarm = Date.now();
       const data = await res.json();
-      if (data && data.ok && data.reply) return { ok: true, reply: data.reply };
+      if (data && data.ok && data.reply) return { ok: true, reply: data.reply, logHere: !!data.provider };
       return { ok: false, reason: (data && data.reason) || 'error' };
     } catch (e) {
       return { ok: false, reason: 'network' };
     } finally { clearTimeout(timer); }
   };
 
-  // save offline-mode chats to the Google Sheet (fire-and-forget)
-  const logOffline = (text, replies) => {
+  // save chats to the Google Sheet in the background (fire-and-forget), so the visitor never waits for it
+  const logOffline = (text, replies, mode) => {
     if (!ENDPOINT) return;
     const bot = replies.map((m) => [m.text, m.card && ('[' + m.card.title + ']'), m.pkg && ('[' + m.pkg.name + ' ' + m.pkg.price + ']')].filter(Boolean).join(' ')).join(' | ');
-    try { fetch(ENDPOINT, { method: 'POST', mode: 'no-cors', keepalive: true, body: JSON.stringify({ action: 'log', sid: S.sid, page: location.href, user: text, bot }) }); } catch (e) {}
+    try { fetch(ENDPOINT, { method: 'POST', mode: 'no-cors', keepalive: true, body: JSON.stringify({ action: 'log', mode: mode || 'offline', sid: S.sid, page: location.href, user: text, bot }) }); } catch (e) {}
+  };
+
+  // ---------- speed: keep the Apps Script backend warm ----------
+  // A "cold" Apps Script adds 1-3 sec to the first reply. We send a tiny GET ping
+  // shortly after the page loads and whenever the visitor reaches for the chat.
+  let lastWarm = 0;
+  const warm = () => {
+    if (!ENDPOINT || S.aiOff || Date.now() - lastWarm < 240000) return;
+    lastWarm = Date.now();
+    try { fetch(ENDPOINT, { method: 'GET', mode: 'no-cors', cache: 'no-store' }).catch(() => {}); } catch (e) {}
   };
 
   let busy = false;
@@ -331,6 +350,7 @@
       if (r.ok) {
         const t = pickTopic(text); if (t) { S.topic = t; S.problem = text; } else if (!S.problem && text.length > 15) S.problem = text;
         say({ text: r.reply });
+        if (r.logHere) logOffline(text, [{ text: r.reply }], 'ai');
         busy = false; return;
       }
       if (r.reason === 'ai_not_configured') { S.aiOff = true; save(); }
@@ -354,11 +374,15 @@
     if (open) {
       if (!S.msgs.length) say({ text: T.greet.en + '\n' + 'Aap Hindi, English ya kisi bhi bhasha mein likh sakte hain.', chips: PROBLEM_CHIPS });
       else render();
+      warm();
       if (window.matchMedia('(min-width: 641px)').matches) setTimeout(() => input.focus(), 50);
       if (window.WF && WF.track) WF.track('flash_open');
     }
   };
   launch.addEventListener('click', () => setOpen(panel.hidden));
+  ['pointerenter', 'focus', 'touchstart'].forEach((ev) => launch.addEventListener(ev, warm, { passive: true }));
+  input.addEventListener('focus', warm);
+  addEventListener('load', () => setTimeout(warm, 2500));
   $('.flash-close').addEventListener('click', () => setOpen(false));
   $('.flash-reset').addEventListener('click', () => {
     S = { sid: rid(), msgs: [], lang: null, topic: null, size: null, open: true, aiOff: S.aiOff, teased: true };
