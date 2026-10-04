@@ -1,7 +1,7 @@
 /**
  * Workflash Automation – website backend (Google Apps Script)
  *  1. Saves every quote-form enquiry into the "Leads" sheet.
- *  2. Powers Flash 5.0, the website chat assistant, with AI (any language),
+ *  2. Powers Flash 5.0, the website chat assistant, with AI (understands any language, replies in English),
  *     and saves chats into the "Chats" sheet.
  *
  * ---------------------------------------------------------------
@@ -20,7 +20,7 @@
  *        DAILY_LIMIT  = max AI replies per day (default 1200) – protects your bill
  *        NOTIFY_EMAIL = email address to get every new enquiry
  *    Without AI_API_KEY, Flash 5.0 still works in its built-in offline mode
- *    (English, Hindi, Hinglish).
+ *    (understands English, Hindi and Hinglish, replies in English).
  * 4. Deploy → New deployment → type "Web app".
  *      Execute as: Me   |   Who has access: Anyone
  *    Click Deploy, allow the permissions, copy the Web app URL
@@ -58,7 +58,7 @@ YOUR JOB
    Head office: Kirari, Nangloi, Delhi – 110086 (meetings by appointment). Instagram: @workflash.tech (https://www.instagram.com/workflash.tech/). The team replies within 24 hours.
 
 LANGUAGE
-- Always reply in the same language and script the visitor uses (Hindi, Hinglish, English, Marathi, Gujarati, Bengali, Tamil, Telugu, Kannada, Malayalam, Punjabi, Urdu, Arabic or any other). If they switch language, switch with them.
+- Always reply in English, even when the visitor writes in Hindi, Hinglish or another language (you can understand any language). Use simple English.
 - Keep business terms like CRM, WhatsApp, dashboard, Excel in English when that is more natural.
 
 STYLE
@@ -73,6 +73,9 @@ WHAT WORKFLASH OFFERS
 - Python automation: report generators, data pipelines, file processing, API integrations, forecasting.
 - Custom AI agents: customer-support bots in any language, quotation drafts, reading invoices/PDFs, lead scoring, internal knowledge assistant, with human approval for important actions.
 - System integration: Tally, ERP, CRM, e-commerce, accounting tools kept in sync.
+- AI Automation & AI Agent Development (details on workflash.in/automation.html): n8n workflow automation, intelligent automation with LLMs, ChatGPT automation and AI tools, multi-agent collaboration, AI chatbots and voice agents, RAG / knowledge-base AI, Make and Zapier integrations, AI agent monitoring and support.
+- Website & Ecommerce Development: business websites, WordPress, ecommerce stores (Razorpay / PhonePe payments, GST invoices, stock sync), Shopify stores, landing pages and sales funnels, SEO and Google Business Profile, digital marketing (Google and Meta ads with lead tracking), website maintenance and hosting.
+- Mobile Apps Development: customer, staff and dealer apps, React Native, Android, iOS and Flutter apps, app UI/UX design, backend, APIs and admin panel, app maintenance and support. Website and app prices depend on scope and are given as a fixed quote after a free audit.
 
 LIVE PROJECTS (running in real businesses today, shown on the website)
 - Sales CRM: enquiries, qualification, follow-ups, IndiaMART and Meta leads, quotations, orders, dispatch, revenue trend, sales funnel, WhatsApp daily report, Google Sheets sync.
