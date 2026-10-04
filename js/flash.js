@@ -9,7 +9,7 @@
   const WA = WF.WA_NUMBER || '919354676636';
   const PATH = location.pathname;
   const IS_HOME = PATH === '/' || /\/index\.html$/.test(PATH);
-  const QUOTE = '/contact.html';
+  const QUOTE = IS_HOME ? '#quote' : '/#quote';
   const MAX_HISTORY = 12;
   const AI_TIMEOUT_MS = 20000; // after this the offline brain answers, so nobody waits forever
 
@@ -49,7 +49,7 @@
     },
     tasks: {
       re: /task|delegat|deadline|pending|employee|staff|team|kaam|kam nahi|work not|accountab|time par nahi|टास्क|काम|कर्मचारी|स्टाफ|डेडलाइन|समय पर/i,
-      project: 'Delegation Software', pkg: 'medium', link: '/projects.html',
+      project: 'Delegation Software', pkg: 'medium', link: '/#projects',
       title: { en: 'Delegation Software for team tasks', hx: 'Team ke kaam ke liye Delegation Software', hi: 'टीम के काम के लिए डेलिगेशन सॉफ्टवेयर' },
       pts: {
         en: ['Assign tasks with deadlines in seconds', 'Automatic follow-ups, so you stop chasing people', 'Weekly MIS score per employee: on time, revised once or twice, overdue'],
@@ -59,7 +59,7 @@
     },
     attendance: {
       re: /attendance|hazri|haziri|salary|payroll|leave|punch|late|absent|chhutti|chutti|छुट्टी|हाजिरी|हाज़िरी|सैलरी|वेतन|अटेंडेंस|तनख्वाह/i,
-      project: 'Attendance System', pkg: 'medium', link: '/projects.html',
+      project: 'Attendance System', pkg: 'medium', link: '/#projects',
       title: { en: 'Attendance, leave & salary system', hx: 'Attendance, leave aur salary system', hi: 'अटेंडेंस, छुट्टी और सैलरी सिस्टम' },
       pts: {
         en: ['Staff punch in and out; late, half-day and absent are marked automatically', 'Leave requests and approvals in one place', 'Monthly salary and payout calculated from attendance'],
@@ -69,7 +69,7 @@
     },
     inventory: {
       re: /inventory|stock|purchase|vendor|supplier|raw material|godown|warehouse|maal|rate badh|rate increase|माल|स्टॉक|खरीद|वेंडर|गोदाम|इन्वेंटरी|सप्लायर/i,
-      project: 'Smart Inventory Controller', pkg: 'medium', link: '/projects.html',
+      project: 'Smart Inventory Controller', pkg: 'medium', link: '/#projects',
       title: { en: 'Smart Inventory Controller', hx: 'Smart Inventory Controller', hi: 'स्मार्ट इन्वेंटरी कंट्रोलर' },
       pts: {
         en: ['Live stock and valuation from your purchase data', 'Alerts when a vendor charges above the approved rate, with the extra cost in ₹', 'Bulk import from Excel and one-click reports'],
@@ -198,8 +198,8 @@
   const cardHTML = (c) => `<div class="flash-card">
       <b class="fc-title">${esc(c.title)}</b>
       <ul>${c.pts.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>
-      ${c.project ? `<a class="fc-live" href="/projects.html"><i class="live"></i>${esc(c.liveLabel)}: ${esc(c.project)}</a>` : ''}
-      ${c.link && c.link !== '/projects.html' ? `<a class="fc-more" href="${c.link}">Learn more →</a>` : ''}
+      ${c.project ? `<a class="fc-live" href="${IS_HOME ? '#projects' : '/#projects'}"><i class="live"></i>${esc(c.liveLabel)}: ${esc(c.project)}</a>` : ''}
+      ${c.link && c.link !== '/#projects' ? `<a class="fc-more" href="${c.link}">Learn more →</a>` : ''}
     </div>`;
   const pkgHTML = (p) => `<div class="flash-card flash-pkg"><small>${esc(p.label)}</small><b>${esc(p.name)}</b><strong>${esc(p.price)}</strong><span>${esc(p.note)}</span></div>`;
   const render = () => {

@@ -23,21 +23,20 @@
   };
 
   // ---------- Basics ----------
-  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  if ($('#yearsExp')) $('#yearsExp').textContent = Math.max(1, new Date().getFullYear() - FOUNDED) + '+';
+  $('#yearsExp').textContent = Math.max(1, new Date().getFullYear() - FOUNDED) + '+';
 
   // ---------- Nav, progress, back-to-top ----------
   const progress = $('#progress');
   const toTop = $('#toTop');
   const onScroll = () => {
     const y = window.scrollY;
-    if (toTop) toTop.classList.toggle('show', y > 900);
+    toTop.classList.toggle('show', y > 900);
     const h = document.documentElement.scrollHeight - innerHeight;
-    if (progress) progress.style.width = (h > 0 ? (y / h) * 100 : 0) + '%';
+    progress.style.width = (h > 0 ? (y / h) * 100 : 0) + '%';
   };
   onScroll();
   addEventListener('scroll', onScroll, { passive: true });
-  if (toTop) toTop.addEventListener('click', () => scrollTo({ top: 0 }));
+  toTop.addEventListener('click', () => scrollTo({ top: 0 }));
 
   // Active nav link
   const links = $$('#navLinks a:not(.btn)').filter((l) => /^#[\w-]+$/.test(l.getAttribute('href') || ''));
@@ -69,7 +68,6 @@
   }, { threshold: 0.12 });
   $$('.reveal').forEach((el) => io.observe(el));
 
-  if ($('#home')) {
   // ---------- Hero: typing rotator ----------
   const words = ['lead follow-ups', 'sales reports', 'invoices & reminders', 'customer support', 'data pipelines in Python', 'entire operations'];
   const rot = $('#rotator');
@@ -146,7 +144,6 @@
     const was = running; running = e.isIntersecting;
     if (running && !was && !reduceMotion) requestAnimationFrame(draw);
   }).observe($('#home'));
-  }
 
   // ---------- Automation Journey ----------
   const LEVELS = [
@@ -194,7 +191,6 @@
   const METER_LABELS = ['Manual work automated', 'AI & data intelligence', 'System integration'];
   const levelsEl = $('#levels');
   const panel = $('#levelPanel');
-  if (levelsEl && panel) {
   levelsEl.innerHTML = LEVELS.map((l, i) => `
     <button class="lvl" role="tab" data-i="${i}" aria-selected="false">
       <span class="n">L${i + 1}</span><span><b>${l.name}</b><small>${l.tag}</small></span>
@@ -216,7 +212,7 @@
           </div>
         </div>
         <div class="lp-foot"><span>Typical timeline: <strong>${l.time}</strong></span>
-          <a href="/contact.html" class="btn btn-primary btn-sm" data-level="${i + 1}">Plan my Level ${i + 1} automation ${icon('arrow')}</a></div>
+          <a href="#quote" class="btn btn-primary btn-sm" data-level="${i + 1}">Plan my Level ${i + 1} automation ${icon('arrow')}</a></div>
       </div>`;
     requestAnimationFrame(() => requestAnimationFrame(() => $$('.meter b', panel).forEach((b) => { b.style.width = b.dataset.w + '%'; })));
   };
@@ -225,12 +221,12 @@
   // auto-advance until the visitor interacts
   // (disabled on touch screens so the text doesn't change while someone is reading)
   let autoLvl = 0;
+  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const autoTimer = canHover && !reduceMotion
     ? setInterval(() => { autoLvl = (autoLvl + 1) % LEVELS.length; showLevel(autoLvl); }, 6000)
     : null;
   const stopAuto = () => { if (autoTimer) clearInterval(autoTimer); };
   ['mouseenter', 'focusin', 'pointerdown'].forEach((ev) => $('.journey').addEventListener(ev, stopAuto));
-  }
 
   // ---------- Departments ----------
   const DEPTS = [
@@ -278,7 +274,6 @@
     ] },
   ];
   const tabs = $('#deptTabs'), body = $('#deptBody');
-  if (tabs && body) {
   tabs.innerHTML = DEPTS.map((d, i) => `<button class="dtab" role="tab" data-i="${i}">${icon(d.ic)}${d.name}</button>`).join('');
   const showDept = (i) => {
     $$('.dtab', tabs).forEach((b, k) => { b.classList.toggle('active', k === i); b.setAttribute('aria-selected', k === i); });
@@ -291,7 +286,6 @@
   };
   tabs.addEventListener('click', (e) => { const b = e.target.closest('.dtab'); if (b) showDept(+b.dataset.i); });
   showDept(0);
-  }
 
   // ---------- ROI calculator ----------
   const ids = ['people', 'hours', 'salary', 'auto'];
@@ -317,10 +311,8 @@
     $('#tAfter').textContent = Math.round(manualHrs - saved).toLocaleString('en-IN') + ' h';
     roiSummary = `ROI estimate: ${people} people, ${hours} hrs/day manual work, ${auto}% automatable → approx. ${inr(yearly)} saved per year.`;
   };
-  if ($('#people')) {
-    ids.forEach((id) => $('#' + id).addEventListener('input', calc));
-    calc();
-  }
+  ids.forEach((id) => $('#' + id).addEventListener('input', calc));
+  calc();
 
   // ---------- Readiness assessment ----------
   const QUIZ = [
@@ -333,7 +325,6 @@
   ];
   const answers = [];
   const qBody = $('#qBody');
-  if (qBody) {
   let quizResult = '';
   const renderQ = (n) => {
     $('#qCount').textContent = `Question ${n + 1} of ${QUIZ.length}`;
@@ -363,7 +354,7 @@
           <p>${lvl < 5 ? `Your next milestone is <b>Level ${lvl + 1}: ${next.name}</b>. Here's what we'd automate first:` : 'You are among the most automated businesses. Next focus:'}</p>
           <ul>${recs.map((r) => `<li>${icon('check')}${r}</li>`).join('')}</ul>
           <div class="result-actions">
-            <a href="/contact.html" class="btn btn-primary" id="quizQuote">Get a quote for this plan ${icon('arrow')}</a>
+            <a href="#quote" class="btn btn-primary" id="quizQuote">Get a quote for this plan ${icon('arrow')}</a>
             <button class="btn btn-ghost" id="quizRetry">Retake</button>
           </div>
         </div>
@@ -378,11 +369,9 @@
     if (e.target.closest('#quizQuote')) prefill(quizResult);
   });
   renderQ(0);
-  }
 
   // ---------- Python Lab (Pyodide) ----------
   const code = $('#pyCode');
-  if (code) {
   code.value = $('#pySource').textContent.trim();
   code.addEventListener('keydown', (e) => {
     if (e.key !== 'Tab') return;
@@ -431,60 +420,28 @@
     }
   });
 
-  }
-
-  // ---------- Quote form (lives on /contact.html) ----------
-  // Buttons on other pages (pricing, projects, industries, ROI, readiness score, automation services)
-  // save what the visitor picked and link to /contact.html, where the form is filled in for them.
+  // ---------- Quote form ----------
   const form = $('#quoteForm');
   const note = $('#formNote');
-  const PREFILL_KEY = 'wf_prefill';
-  const KINDS = /^(ROI estimate|Automation readiness score|Interested in Level|Interested in: |Industry: )/;
-  const applyPrefill = (d) => {
-    if (!form || !d) return;
-    if (d.text) {
-      const kind = (d.text.match(KINDS) || [])[1];
-      const lines = form.message.value.split('\n').filter((l) => l.trim() && !(kind && l.startsWith(kind)) && l !== d.text);
-      form.message.value = [d.text, ...lines].join('\n');
-    }
-    (d.svcs || []).concat(d.project ? [d.project] : []).forEach((v) => {
-      const box = $$('input[name=svc]', form).find((c) => c.value === v);
-      if (box) box.checked = true;
-    });
-    if (d.size) form.size.value = d.size;
-    if (d.package) form.package.value = d.package;
+  let extra = '';
+  const prefill = (text) => {
+    extra = text || '';
+    if (!extra) return;
+    // replace an earlier auto-filled line of the same kind instead of stacking duplicates
+    const kind = (extra.match(/^(ROI estimate|Automation readiness score|Interested in Level|Interested in: |Industry: )/) || [])[1];
+    const lines = form.message.value.split('\n').filter((l) => l.trim() && !(kind && l.startsWith(kind)));
+    form.message.value = [extra, ...lines].join('\n');
   };
-  const prefill = (d) => {
-    if (typeof d === 'string') d = { text: d };
-    if (!d || (!d.text && !d.size && !d.project && !(d.svcs || []).length)) return;
-    if (form) { applyPrefill(d); return; }
-    try {
-      const cur = JSON.parse(sessionStorage.getItem(PREFILL_KEY) || 'null') || {};
-      const texts = (cur.text ? cur.text.split('\n') : []).filter((l) => {
-        const kind = d.text && (d.text.match(KINDS) || [])[1];
-        return l.trim() && !(kind && l.startsWith(kind)) && l !== d.text;
-      });
-      sessionStorage.setItem(PREFILL_KEY, JSON.stringify({
-        text: [d.text, ...texts].filter(Boolean).join('\n'),
-        project: d.project || cur.project || null,
-        svcs: [...new Set([...(cur.svcs || []), ...(d.svcs || [])])],
-        size: d.size || cur.size || '', package: d.package || cur.package || '',
-      }));
-    } catch (err) {}
-  };
-  window.WF.prefill = prefill;
-
-  const roiBtn = $('#roiQuote');
-  if (roiBtn) roiBtn.addEventListener('click', () => prefill(roiSummary));
-  $$('[data-size]').forEach((b) => b.addEventListener('click', () => prefill({ size: b.dataset.size, package: b.dataset.package || '' })));
+  $('#roiQuote').addEventListener('click', () => prefill(roiSummary));
+  $$('[data-size]').forEach((b) => b.addEventListener('click', () => {
+    form.size.value = b.dataset.size;
+    if (b.dataset.package) form.package.value = b.dataset.package;
+  }));
   // Live projects: "Get this for my business" ticks the matching checkbox
   $$('[data-project]').forEach((b) => b.addEventListener('click', () => {
-    prefill({ text: `Interested in: ${b.dataset.project} (seen in your live projects).`, project: b.dataset.project });
-  }));
-  // Automation page: every service line ("n8n Workflow Automation", "Shopify Store"...) pre-fills the form
-  $$('[data-interest]').forEach((b) => b.addEventListener('click', () => {
-    prefill({ text: `Interested in: ${b.dataset.interest}.`, svcs: b.dataset.svc ? [b.dataset.svc] : [] });
-    track('service_interest', { service: b.dataset.interest });
+    const box = $$('input[name=svc]', form).find((c) => c.value === b.dataset.project);
+    if (box) box.checked = true;
+    prefill(`Interested in: ${b.dataset.project} (seen in your live projects).`);
   }));
   // Live projects: screenshot lightbox
   const lb = $('#lightbox');
@@ -499,16 +456,20 @@
   } else {
     $$('.shot').forEach((b) => b.addEventListener('click', () => window.open(b.dataset.full, '_blank', 'noopener')));
   }
-  if (panel) panel.addEventListener('click', (e) => {
+  panel.addEventListener('click', (e) => {
     const b = e.target.closest('[data-level]');
     if (b) prefill(`Interested in Level ${b.dataset.level}: ${LEVELS[b.dataset.level - 1].name}.`);
   });
 
-  if (form) {
-  // what the visitor picked on another page (or in the Flash 5.0 chat)
+  // chat summary handed over from Flash 5.0 on another page
   try {
-    const pre = JSON.parse(sessionStorage.getItem(PREFILL_KEY) || 'null');
-    if (pre) { applyPrefill(pre); sessionStorage.removeItem(PREFILL_KEY); }
+    const pre = JSON.parse(sessionStorage.getItem('wf_prefill') || 'null');
+    if (pre && pre.text) {
+      form.message.value = pre.text + (form.message.value ? '\n' + form.message.value : '');
+      const box = pre.project && $$('input[name=svc]', form).find((c) => c.value === pre.project);
+      if (box) box.checked = true;
+      sessionStorage.removeItem('wf_prefill');
+    }
   } catch (err) {}
 
   let via = 'whatsapp';
@@ -552,8 +513,6 @@
     note.className = 'form-note';
     note.textContent = 'Thank you! Your request is ready to send. We reply within 24 hours.';
   });
-
-  }
 
   // ---------- Industries: "Plan for my industry" fills the quote form ----------
   $$('[data-industry]').forEach((b) => b.addEventListener('click', () => {
@@ -643,7 +602,7 @@
     setTimeout(() => h1 && h1.classList.add('in'), 150);
 
     // 2) stagger cards inside grids
-    ['.svc-grid', '.tiers', '.projects', '.timeline', '.strip-grid', '.bento', '.explore-grid', '.ax-cols', '.ax-items'].forEach((sel) => $$(sel).forEach((g) => {
+    ['.svc-grid', '.tiers', '.projects', '.timeline', '.strip-grid', '.bento'].forEach((sel) => $$(sel).forEach((g) => {
       $$(':scope > .reveal', g).forEach((el, k) => {
         el.style.transitionDelay = Math.min(k, 7) * 90 + 'ms';
         el.addEventListener('transitionend', () => { el.style.transitionDelay = ''; }, { once: true });
@@ -671,11 +630,11 @@
     const onMotionScroll = () => {
       ticking = false;
       const y = scrollY;
-      if (heroCopy && heroVis && innerWidth > 900 && y < innerHeight * 1.2) {
+      if (innerWidth > 900 && y < innerHeight * 1.2) {
         heroCopy.style.translate = `0 ${y * 0.16}px`;
         heroCopy.style.opacity = Math.max(0, 1 - y / (innerHeight * 0.95)).toFixed(3);
         heroVis.style.translate = `0 ${y * 0.07}px`;
-      } else if (heroCopy && heroVis && innerWidth <= 900) {
+      } else if (innerWidth <= 900) {
         heroCopy.style.translate = heroVis.style.translate = heroCopy.style.opacity = '';
       }
       if (tl) {

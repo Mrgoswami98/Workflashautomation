@@ -28,7 +28,8 @@ window.WF = {
     get(k) { try { return JSON.parse(sessionStorage.getItem(k) || 'null'); } catch (e) { return null; } },
     set(k, v) { try { sessionStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
   };
-  // Each section of the site now has its own page (see README → "Pages").
+  const isHome = !!document.getElementById('home');
+  const home = (hash) => (isHome ? hash : '/' + hash);   // '#quote' on the home page, '/#quote' elsewhere
 
   // =========================================================
   // Cookie consent (Google Consent Mode v2)
@@ -146,17 +147,7 @@ window.WF = {
   // =========================================================
   const nav = document.getElementById('nav');
   const navLinks = document.getElementById('navLinks');
-  // highlight the menu link of the page we are on
-  if (navLinks) {
-    const here = location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
-    navLinks.querySelectorAll('a:not(.btn)').forEach((a) => {
-      const p = (a.getAttribute('href') || '').split('#')[0].replace(/\.html$/, '');
-      const on = p && p !== '/' && (here === p || (p === '/services' && here.startsWith('/services/')));
-      a.classList.toggle('active', !!on);
-      if (on) a.setAttribute('aria-current', 'page');
-    });
-  }
-  const svcLink = navLinks && [...navLinks.querySelectorAll('a')].find((a) => /services\.html$/.test(a.getAttribute('href')));
+  const svcLink = navLinks && [...navLinks.querySelectorAll('a')].find((a) => /#services$/.test(a.getAttribute('href')));
   if (svcLink) {
     const chev = '<svg class="mm-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
     const arrow = '<svg class="mm-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
@@ -164,7 +155,7 @@ window.WF = {
     const wrap = document.createElement('div');
     wrap.className = 'nav-item has-mega';
     wrap.innerHTML = `
-      <a href="${svcLink.getAttribute('href')}" class="nav-trigger${svcLink.classList.contains('active') ? ' active' : ''}" aria-expanded="false" aria-controls="megaServices">Services ${chev}</a>
+      <a href="${svcLink.getAttribute('href')}" class="nav-trigger" aria-expanded="false" aria-controls="megaServices">Services ${chev}</a>
       <div class="mega" id="megaServices">
         <div class="container mega-inner">
           ${col('Services', [
@@ -173,24 +164,22 @@ window.WF = {
             ['/services/mis-dashboards-reporting.html', 'MIS &amp; Dashboards', 'Reports that refresh themselves'],
             ['/services/python-automation.html', 'Python Automation', 'Data pipelines, reports, integrations'],
             ['/services/ai-agents.html', 'Custom AI Agents', 'Trained on your business data'],
-            ['/services.html', 'All services', 'Departments, process &amp; Python Lab'],
-          ])}
-          ${col('Automation &amp; development', [
-            ['/automation.html#ai-automation', 'AI Automation &amp; AI Agents', 'n8n, LLMs, ChatGPT, multi-agent'],
-            ['/automation.html#web-development', 'Website &amp; Ecommerce', 'WordPress, Shopify, digital marketing'],
-            ['/automation.html#mobile-apps', 'Mobile Apps', 'React Native, Android &amp; iOS'],
           ])}
           ${col('Live systems', [
-            ['/projects.html', 'Sales CRM'], ['/projects.html', 'Delegation Software'],
-            ['/projects.html', 'Smart Inventory Controller'], ['/projects.html', 'Attendance System'],
-            ['/industries.html', 'Industries we serve'],
+            [home('#projects'), 'Sales CRM'], [home('#projects'), 'Delegation Software'],
+            [home('#projects'), 'Smart Inventory Controller'], [home('#projects'), 'Attendance System'],
+          ])}
+          ${col('Industries', [
+            [home('#industries'), 'Manufacturing'], [home('#industries'), 'Trading &amp; Distribution'],
+            [home('#industries'), 'Real Estate'], [home('#industries'), 'Education &amp; Coaching'],
+            [home('#industries'), 'Clinics, Retail &amp; Services'],
           ])}
           <div class="mm-feature">
             <span class="mm-kicker">Free resource</span>
             <b>The SME Automation Checklist</b>
             <p>28 daily tasks your team can stop doing by hand. Free PDF.</p>
-            <a href="/#checklist" class="mm-cta">Get the checklist ${arrow}</a>
-            <a href="/roi.html#assessment" class="mm-cta alt">Free readiness score ${arrow}</a>
+            <a href="${home('#checklist')}" class="mm-cta">Get the checklist ${arrow}</a>
+            <a href="${home('#assessment')}" class="mm-cta alt">Free readiness score ${arrow}</a>
           </div>
         </div>
       </div>`;
