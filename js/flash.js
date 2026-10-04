@@ -28,7 +28,8 @@
     if (/\b(hai|hain|ho|kya|kyu|kyun|nahi|nhi|nahin|mujhe|muje|hume|humein|chahiye|chaiye|karna|karni|karte|kaise|kitna|kitne|mera|meri|mere|hamara|hamari|humara|kaam|bhai|ji|aap|apka|aapka|batao|bataiye|bataye|hota|hoti|wala|wali|raha|rahi|rahe|sakta|sakte|dikkat|pareshani|samasya|problem hai)\b/i.test(t)) return 'hx';
     return 'en';
   };
-  const L = () => (S.lang === 'hi' || S.lang === 'hx' ? S.lang : 'en');
+  // Flash understands English, Hindi and Hinglish, but always replies in English
+  const L = () => 'en';
 
   // ---------- knowledge for offline mode ----------
   const PKG = {
@@ -97,6 +98,16 @@
         hi: ['प्राइस लिस्ट, कैटलॉग और सवालों के तुरंत जवाब, 24/7', 'लीड अपने आप Sheet या CRM में सेव', 'पेमेंट रिमाइंडर और फॉलो-अप मैसेज समय पर'],
       },
     },
+    build: {
+      re: /website|web ?site|web development|wordpress|woo ?commerce|shopify|e-?commerce|online store|landing page|\bseo\b|digital marketing|google ads|mobile app|\bapps?\b|android|\bios\b|iphone|react native|flutter|app develop|n8n|zapier|make\.com|workflow automation|multi-?agent|\bllms?\b|वेबसाइट|ऐप/i,
+      project: null, pkg: 'medium', link: '/automation.html',
+      title: { en: 'Websites, ecommerce, mobile apps & n8n / AI automation', hx: 'Websites, ecommerce, mobile apps & n8n / AI automation', hi: 'Websites, ecommerce, mobile apps & n8n / AI automation' },
+      pts: {
+        en: ['n8n workflows, LLM / ChatGPT automation and multi-agent AI that connect your CRM, WhatsApp and Sheets', 'Fast websites, WordPress, Shopify and ecommerce stores, plus SEO and digital marketing', 'React Native, Android and iOS apps for customers, staff and dealers'],
+        hx: ['n8n workflows, LLM / ChatGPT automation and multi-agent AI that connect your CRM, WhatsApp and Sheets', 'Fast websites, WordPress, Shopify and ecommerce stores, plus SEO and digital marketing', 'React Native, Android and iOS apps for customers, staff and dealers'],
+        hi: ['n8n workflows, LLM / ChatGPT automation and multi-agent AI that connect your CRM, WhatsApp and Sheets', 'Fast websites, WordPress, Shopify and ecommerce stores, plus SEO and digital marketing', 'React Native, Android and iOS apps for customers, staff and dealers'],
+      },
+    },
     ai: {
       re: /\bai\b|agent|gpt|chatgpt|artificial|machine learning|एआई/i,
       project: null, pkg: 'advanced', link: '/services/ai-agents.html',
@@ -115,7 +126,7 @@
 
   const T = {
     greet: {
-      en: "Hi, I'm **Flash 5.0**, Workflash Automation's assistant.\nTell me what is slowing your business down, in any language, and I'll suggest the right solution.",
+      en: "Hi, I'm **Flash 5.0**, Workflash Automation's assistant.\nTell me what is slowing your business down and I'll suggest the right solution.",
       hx: 'Namaste! Main **Flash 5.0** hoon, Workflash Automation ka assistant.\nBataiye aapke business mein kya pareshani aa rahi hai, kisi bhi bhasha mein. Main sahi solution bataunga.',
       hi: 'नमस्ते! मैं **Flash 5.0** हूँ, Workflash Automation का असिस्टेंट।\nबताइए आपके बिज़नेस में क्या परेशानी आ रही है, किसी भी भाषा में। मैं सही समाधान बताऊँगा।',
     },
@@ -133,18 +144,19 @@
     },
     human: { en: 'Sure. Tap **WhatsApp us** below, call us on **+91 93546 76636**, or email Workflashspace@gmail.com.\nHead office: Kirari, Nangloi, Delhi – 110086 · Instagram: @workflash.tech', hx: 'Bilkul. Neeche **WhatsApp us** dabaiye, **+91 93546 76636** par call kariye, ya email: Workflashspace@gmail.com\nHead office: Kirari, Nangloi, Delhi – 110086 · Instagram: @workflash.tech', hi: 'ज़रूर। नीचे **WhatsApp us** दबाएँ, **+91 93546 76636** पर कॉल करें, या ईमेल: Workflashspace@gmail.com\nहेड ऑफिस: किराड़ी, नांगलोई, दिल्ली – 110086 · Instagram: @workflash.tech' },
     unknown: { en: "I want to understand this properly. Which of these is closest to your problem? Or describe it in a little more detail.", hx: 'Main ise sahi se samajhna chahta hoon. Inmein se kaunsi pareshani sabse kareeb hai? Ya thoda aur detail mein bataiye.', hi: 'मैं इसे ठीक से समझना चाहता हूँ। इनमें से कौन-सी परेशानी सबसे करीब है? या थोड़ा और विस्तार से बताइए।' },
-    other: { en: "I understand English, Hindi and Hinglish best right now, so I'm replying in English. For help in your language, message our team on WhatsApp.", hx: '', hi: '' },
+    other: { en: "I reply in English. For help in another language, message our team on WhatsApp.", hx: '', hi: '' },
     thanks: { en: 'Happy to help! Anything else about your business I can help with?', hx: 'Khushi hui madad karke! Business mein aur koi pareshani?', hi: 'मदद करके खुशी हुई! बिज़नेस में और कोई परेशानी?' },
     error: { en: "Sorry, I couldn't connect just now. Please try again, or message us on WhatsApp.", hx: 'Maaf kijiye, abhi connect nahi ho paya. Dobara try kariye ya WhatsApp par message kariye.', hi: 'माफ़ कीजिए, अभी कनेक्ट नहीं हो पाया। दोबारा कोशिश करें या WhatsApp पर मैसेज करें।' },
-    placeholder: { en: 'Type your problem, any language…', hx: 'Apni pareshani likhiye…', hi: 'अपनी परेशानी लिखिए…' },
+    placeholder: { en: 'Type your business problem…', hx: 'Apni pareshani likhiye…', hi: 'अपनी परेशानी लिखिए…' },
   };
   const PROBLEM_CHIPS = [
-    'Leads miss ho rahe hain / follow-up nahi hota',
-    'Team ka kaam time par nahi hota',
-    'Attendance aur salary ka hisaab',
-    'Stock aur purchase rate control',
-    'Reports banane mein bahut time lagta hai',
-    'WhatsApp par replies late jaate hain',
+    'We miss leads / follow-ups are late',
+    'Team tasks are not done on time',
+    'Attendance and salary calculation',
+    'Stock and purchase rate control',
+    'Reports take too much time',
+    'WhatsApp replies are slow',
+    'Website, ecommerce or mobile app',
   ];
 
   // ---------- DOM ----------
@@ -169,7 +181,7 @@
     <button class="flash-launch" type="button" aria-controls="flashPanel" aria-expanded="false">
       <span class="flash-launch-ic">${BOLT}</span><span class="flash-launch-txt"><b>Flash 5.0</b><small>Ask me anything</small></span>
     </button>
-    <div class="flash-tease" hidden><button type="button" class="flash-tease-x" aria-label="Dismiss">×</button><span>Business mein koi pareshani? <b>Flash 5.0</b> se poochiye.</span></div>
+    <div class="flash-tease" hidden><button type="button" class="flash-tease-x" aria-label="Dismiss">×</button><span>Need help with your business? Ask <b>Flash 5.0</b>.</span></div>
     <section class="flash-panel" id="flashPanel" role="dialog" aria-label="Flash 5.0 chat assistant" hidden>
       <header class="flash-head">
         <span class="flash-avatar">${BOLT}</span>
@@ -305,7 +317,10 @@
       content: (m.text || '') + (m.card ? `\n[Suggested: ${m.card.title}]` : '') + (m.pkg ? `\n[Package: ${m.pkg.name} ${m.pkg.price}]` : ''),
     }));
     if (pending) list.push({ role: 'user', content: pending });
-    return list.slice(-MAX_HISTORY);
+    const out = list.slice(-MAX_HISTORY);
+    const lastUser = out.map((m) => m.role).lastIndexOf('user');
+    if (lastUser >= 0) out[lastUser] = { role: 'user', content: out[lastUser].content + '\n\n(Please reply in English.)' };
+    return out;
   };
   const aiReply = async (history = buildHistory()) => {
     const ctrl = new AbortController();
