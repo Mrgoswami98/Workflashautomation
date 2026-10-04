@@ -971,40 +971,14 @@ main:focus { outline: none; }
 }
 
 /* =========================================================
-   Multi-page layout (each section has its own page)
+   Automation page + "Automation" menu link
    ========================================================= */
-@media (max-width: 1240px) and (min-width: 901px) {
+@media (max-width: 1180px) and (min-width: 901px) {
   .nav-links { gap: 18px; font-size: 14px; }
 }
 @media (max-width: 1010px) and (min-width: 901px) {
-  .nav-links { gap: 14px; font-size: 13.5px; }
-  .brand-word { width: 140px; }
+  .nav-links { gap: 13px; font-size: 13.5px; }
 }
-.page-hero .eyebrow { display: inline-block; margin-bottom: 14px; }
-.nav-links .nav-trigger.active { color: #fff; }
-.nav.scrolled .nav-links .nav-trigger.active, .nav.mega-open .nav-links .nav-trigger.active { color: var(--blue); }
-
-/* Home: explore grid */
-.explore-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
-.xp { display: flex; flex-direction: column; }
-.xp p { flex: 1; }
-.xp:hover .more .ic { transform: translateX(4px); }
-.xp-new { position: absolute; top: 18px; right: 18px; font: 600 11px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: #fff; background: var(--grad); padding: 4px 9px; border-radius: 999px; }
-
-/* Teaser band (services → automation, pricing → ROI) */
-.xp-band { padding: 56px 0; }
-.xp-band-inner { display: flex; align-items: center; justify-content: space-between; gap: 32px; background: var(--grad-soft); border: 1px solid var(--line); border-radius: 20px; padding: 32px 36px; }
-.xp-band-inner h2 { font-size: clamp(22px, 2.6vw, 30px); margin: 8px 0 8px; }
-.xp-band-inner p { color: var(--muted); max-width: 640px; }
-.xp-band-inner .btn { flex: none; }
-
-/* Contact page */
-.contact-top { padding-top: 140px; }
-.contact-h1 { color: #fff; font-size: clamp(32px, 4.4vw, 48px); font-weight: 800; line-height: 1.15; margin: 10px 0 0; }
-
-/* =========================================================
-   Automation page
-   ========================================================= */
 .ax-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
 .ax-chips a { font-size: 13.5px; font-weight: 600; color: var(--d-text); border: 1px solid var(--d-line); background: rgba(255,255,255,.05); padding: 7px 14px; border-radius: 999px; transition: border-color .2s, color .2s, background .2s; }
 .ax-chips a:hover { color: #fff; border-color: rgba(27,200,245,.6); background: rgba(11,92,255,.18); }
@@ -1044,18 +1018,12 @@ main:focus { outline: none; }
 .ax-item:target { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(11,92,255,.18), var(--shadow); }
 
 @media (max-width: 1100px) {
-  .explore-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ax-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ax-detail-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
   .ax-detail-copy { position: static; }
 }
-@media (max-width: 900px) {
-  .xp-band-inner { flex-direction: column; align-items: flex-start; padding: 26px 24px; }
-}
 @media (max-width: 640px) {
-  .explore-grid, .ax-cols, .ax-items { grid-template-columns: minmax(0, 1fr); }
+  .ax-cols, .ax-items { grid-template-columns: minmax(0, 1fr); }
   .ax-col h3 { min-height: 0; }
-  .contact-top { padding-top: 112px; }
-  .xp-band { padding: 40px 0; }
 }
 .ax-detail-copy h2 { font-size: clamp(28px, 3vw, 40px); }
